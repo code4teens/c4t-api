@@ -1,0 +1,30 @@
+swagger: "2.0"
+info:
+  title: "Code4Teens REST API"
+  version: "1.0.0"
+basePath: "/api/v1"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+paths:
+  /students:
+    get:
+      operationId: "student.get_all"
+      tags:
+        - "Student"
+      summary: "Returns all students"
+      responses:
+        200:
+          description: "Success!"
+          schema:
+            type: "array"
+            items:
+              properties:
+                id:
+                  type: "integer"
+                name:
+                  type: "string"
+                display_name:
+                  type: "string"
