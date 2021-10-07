@@ -9,12 +9,12 @@ produces:
   - "application/json"
 
 paths:
-  /students:
+  /users:
     get:
-      operationId: "student.get_all"
+      operationId: "user.get_all"
       tags:
-        - "Student"
-      summary: "Returns all students"
+        - "User"
+      summary: "Returns all users"
       responses:
         200:
           description: "Success!"
@@ -26,5 +26,13 @@ paths:
                   type: "integer"
                 name:
                   type: "string"
+                discriminator:
+                  type: "string"
                 display_name:
+                  type: "string"
+                is_admin:
+                  type: "boolean"
+                created_at:
+                  type: "string"
+                last_updated:
                   type: "string"
