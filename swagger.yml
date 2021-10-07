@@ -37,16 +37,57 @@ paths:
                 last_updated:
                   type: string
 
+    post:
+      operationId: user.create
+      tags:
+        - User
+      summary: Creates user
+      parameters:
+        - name: user
+          in: body
+          required: True
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              discriminator:
+                type: string
+              display_name:
+                type: string
+              is_admin:
+                type: boolean
+      responses:
+        201:
+          description: Success!
+          schema:
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              discriminator:
+                type: string
+              display_name:
+                type: string
+              is_admin:
+                type: boolean
+              created_at:
+                type: string
+              last_updated:
+                type: string
+
   /users/{id}:
     get:
       operationId: user.get_one
       tags:
         - User
-      summary: Returns user with given ID
+      summary: Returns user
       parameters:
         - name: id
           in: path
-          description: User ID
           type: integer
           required: True
       responses:

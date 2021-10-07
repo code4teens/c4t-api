@@ -1,4 +1,6 @@
-from config import db, ma
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
+from config import db
 
 
 class User(db.Model):
@@ -16,7 +18,7 @@ class User(db.Model):
     )
 
 
-class UserSchema(ma.SQLAlchemyAutoSchema):
+class UserSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = User
-        sqla_session = db.session
+        load_instance = True
