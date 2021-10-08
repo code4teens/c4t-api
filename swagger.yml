@@ -45,7 +45,7 @@ paths:
       parameters:
         - name: user_data
           in: body
-          required: True
+          required: true
           schema:
             type: object
             properties:
@@ -89,7 +89,7 @@ paths:
         - name: id
           in: path
           type: integer
-          required: True
+          required: true
       responses:
         200:
           description: Success!
@@ -121,7 +121,7 @@ paths:
         - name: id
           in: path
           type: integer
-          required: True
+          required: true
         - name: user_data
           in: body
           schema:
@@ -158,3 +158,17 @@ paths:
                   type: string
                 last_updated:
                   type: string
+
+    delete:
+      operationId: user.delete
+      tags:
+        - User
+      summary: Deletes user
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Success!
