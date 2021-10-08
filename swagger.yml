@@ -43,7 +43,7 @@ paths:
         - User
       summary: Creates user
       parameters:
-        - name: user
+        - name: user_data
           in: body
           required: True
           schema:

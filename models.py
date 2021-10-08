@@ -1,24 +1,40 @@
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow import fields, post_load, Schema
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    func,
+    String
+)
 
-from config import db
+from database import Base
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = 'user'
-    id = db.Column(db.BigInteger, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    discriminator = db.Column(db.String(4), nullable=False)
-    display_name = db.Column(db.String(64), nullable=False)
-    is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
-    last_updated = db.Column(
-        db.DateTime,
+    id = Column(BigInteger, primary_key=True)
+    name = Column(String(64), nullable=False)
+    discriminator = Column(String(4), nullable=False)
+    display_name = Column(String(64), nullable=False)
+    is_admin = Column(Boolean, nullable=False, default=False)
+    created_at = Column(DateTime, nullable=False, default=func.now())
+    last_updated = Column(
+        DateTime,
         nullable=False,
-        default=db.func.now()
+        default=func.now()
     )
 
 
-class UserSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = User
-        load_instance = True
+class UserSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    discriminator = fields.String()
+    display_name = fields.String()
+    is_admin = fields.Boolean()
+    created_at = fields.DateTime()
+    last_updated = fields.DateTime()
+
+    @post_load
+    def make_user(self, data, **kwargs):
+        return User(**data)

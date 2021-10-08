@@ -1,10 +1,9 @@
 import os
 
-import connexion
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 connection = os.environ.get('MYSQL_CONNECTION')
 username = os.environ.get('MYSQL_USERNAME')
 password = os.environ.get('MYSQL_PASSWORD')
@@ -20,11 +19,14 @@ else:
         f'mysql+pymysql://{username}:{password}@127.0.0.1:3306/{database}'
     )
 
-connexion_app = connexion.App(__name__, specification_dir=basedir)
-app = connexion_app.app
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+engine = create_engine(database_uri)
+db_session = scoped_session(
+    sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine
+    )
+)
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+Base = declarative_base()
+Base.query = db_session.query_property()

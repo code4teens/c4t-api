@@ -1,6 +1,6 @@
 from flask import abort
 
-from config import db
+from database import db_session
 from models import User, UserSchema
 
 
@@ -14,16 +14,16 @@ def get_all():
 
 
 # POST users
-def create(user):
-    id = user.get('id')
+def create(user_data):
+    id = user_data.get('id')
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
         user_schema = UserSchema()
-        new_user = user_schema.load(user, session=db.session)
-        db.session.add(new_user)
-        db.session.commit()
-        data = user_schema.dump(new_user)
+        user = user_schema.load(user_data)
+        db_session.add(user)
+        db_session.commit()
+        data = user_schema.dump(user)
 
         return data
     else:
