@@ -32,11 +32,27 @@ def create(user_data):
 
 # GET users/<id>
 def get_one(id):
-    user = User.query.filter_by(id=id).one_or_none()
+    existing_user = User.query.filter_by(id=id).one_or_none()
 
-    if user is not None:
+    if existing_user is not None:
         user_schema = UserSchema()
-        data = user_schema.dump(user)
+        data = user_schema.dump(existing_user)
+
+        return data
+    else:
+        abort(404, f'User not found for ID: {id}')
+
+
+# PUT users/<id>
+def update(id, user_data):
+    existing_user = User.query.filter_by(id=id).one_or_none()
+
+    if existing_user is not None:
+        user_schema = UserSchema()
+        user = user_schema.load(user_data)
+        db_session.merge(user)
+        db_session.commit()
+        data = user_schema.dump(existing_user)
 
         return data
     else:
