@@ -79,3 +79,7 @@ class NestedBotSchema(Schema):
 
 class BotSchema(NestedBotSchema):
     user_id = fields.Integer()
+
+    @post_load
+    def make_bot(self, data, **kwargs):
+        return Bot(**data)

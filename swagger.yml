@@ -248,3 +248,49 @@ paths:
                   type: string
                 last_updated:
                   type: string
+
+    post:
+      operationId: bot.create
+      tags:
+        - Bot
+      summary: Creates bot
+      parameters:
+        - name: bot_data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              discriminator:
+                type: string
+              display_name:
+                type: string
+              user_id:
+                type: integer
+              msg_id:
+                type: integer
+      responses:
+        201:
+          description: Success!
+          schema:
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              discriminator:
+                type: string
+              display_name:
+                type: string
+              user_id:
+                type: integer
+              msg_id:
+                type: integer
+              created_at:
+                type: string
+              last_updated:
+                type: string
