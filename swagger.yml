@@ -38,6 +38,24 @@ paths:
                   type: string
                 last_updated:
                   type: string
+                bots:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      discriminator:
+                        type: string
+                      display_name:
+                        type: string
+                      msg_id:
+                        type: integer
+                      created_at:
+                        type: string
+                      last_updated:
+                        type: string
 
     post:
       operationId: user.create
@@ -119,6 +137,24 @@ paths:
                   type: string
                 last_updated:
                   type: string
+                bots:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      discriminator:
+                        type: string
+                      display_name:
+                        type: string
+                      msg_id:
+                        type: integer
+                      created_at:
+                        type: string
+                      last_updated:
+                        type: string
 
     put:
       operationId: user.update
@@ -182,3 +218,33 @@ paths:
       responses:
         200:
           description: Success!
+
+  /bots:
+    get:
+      operationId: bot.get_all
+      tags:
+        - Bot
+      summary: Returns all bots
+      responses:
+        200:
+          description: Success!
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                discriminator:
+                  type: string
+                display_name:
+                  type: string
+                user_id:
+                  type: integer
+                msg_id:
+                  type: integer
+                created_at:
+                  type: string
+                last_updated:
+                  type: string
