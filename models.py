@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     DateTime,
     func,
+    SmallInteger,
     String
 )
 
@@ -17,6 +18,7 @@ class User(Base):
     name = Column(String(64), nullable=False)
     discriminator = Column(String(4), nullable=False)
     display_name = Column(String(64), nullable=False)
+    cohort_id = Column(SmallInteger, nullable=True)
     is_admin = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
     last_updated = Column(
@@ -31,6 +33,7 @@ class UserSchema(Schema):
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
+    cohort_id = fields.Integer()
     is_admin = fields.Boolean()
     created_at = fields.DateTime()
     last_updated = fields.DateTime()

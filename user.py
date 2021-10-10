@@ -50,6 +50,7 @@ def update(id, user_data):
     if existing_user is not None:
         user_schema = UserSchema()
         user = user_schema.load(user_data)
+        user.id = existing_user.id
         db_session.merge(user)
         db_session.commit()
         data = user_schema.dump(existing_user)
