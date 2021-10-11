@@ -263,7 +263,6 @@ paths:
             application/json:
               schema:
                 type: object
-      x-codegen-request-body-name: bot_data
   /bots/{id}:
     get:
       tags:
@@ -318,7 +317,6 @@ paths:
             application/json:
               schema:
                 type: object
-      x-codegen-request-body-name: bot_data
     delete:
       tags:
       - Bot

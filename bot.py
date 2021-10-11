@@ -14,13 +14,13 @@ def get_all():
 
 
 # POST bots
-def create(bot_data):
-    id = bot_data.get('id')
+def create(body):
+    id = body.get('id')
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
     if existing_bot is None:
         bot_schema = BotSchema()
-        user = bot_schema.load(bot_data)
+        user = bot_schema.load(body)
         db_session.add(user)
         db_session.commit()
         data = bot_schema.dump(user)
@@ -44,12 +44,12 @@ def get_one(id):
 
 
 # PUT bots/<id>
-def update(id, bot_data):
+def update(id, body):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
     if existing_bot is not None:
         bot_schema = BotSchema()
-        bot = bot_schema.load(bot_data)
+        bot = bot_schema.load(body)
         bot.id = existing_bot.id
         db_session.merge(bot)
         db_session.commit()
