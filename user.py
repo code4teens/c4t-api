@@ -1,11 +1,11 @@
-from flask import abort, jsonify, make_response
+from flask import jsonify, make_response
 import bcrypt
 
 from database import db_session
 from models import User, UserSchema
 
 
-def make_error(status, code, message):
+def make_json_response(status, code, message):
     response_object = {
         'status': status,
         'code': code,
@@ -40,7 +40,7 @@ def create(body):
         status = 'Conflict'
         message = f'User {id} already exists'
 
-        return make_error(status, 409, message)
+        return make_json_response(status, 409, message)
 
 
 # GET users/<id>
@@ -55,7 +55,7 @@ def get_one(id):
         status = 'Not Found'
         message = f'User {id} not found'
 
-        return make_error(status, 404, message)
+        return make_json_response(status, 404, message)
 
 
 # PUT users/<id>
@@ -75,7 +75,7 @@ def update(id, body):
         status = 'Not Found'
         message = f'User {id} not found'
 
-        return make_error(status, 404, message)
+        return make_json_response(status, 404, message)
 
 
 # DELETE users/<id>
@@ -85,9 +85,15 @@ def delete(id):
     if existing_user is not None:
         db_session.delete(existing_user)
         db_session.commit()
-        return make_response(f'User for ID: {id} deleted', 200)
+        status = 'OK'
+        message = f'User {id} deleted'
+
+        return make_json_response(status, 200, message)
     else:
-        abort(404, f'User not found for ID: {id}')
+        status = 'Not Found'
+        message = f'User {id} not found'
+
+        return make_json_response(status, 404, message)
 
 
 # PUT users/<id>/password
@@ -95,22 +101,19 @@ def update_password(id, body):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        user = UserSchema().load(body)
+        user = UserSchema(exclude=['password', 'bots']).load(body)
         user.id = existing_user.id
         user.password = bcrypt.hashpw(
             body.get('password').encode('utf-8'), bcrypt.gensalt()
         )
         db_session.merge(user)
         db_session.commit()
-        response_object = {
-            'status': 'OK',
-            'code': 200,
-            'message': f'Updated password for user {id}'
-        }
+        status = 'OK'
+        message = f'Updated password for user {id}'
 
-        return make_response(jsonify(response_object)), 200
+        return make_json_response(status, 200, message)
     else:
         status = 'Not Found'
         message = f'User {id} not found'
 
-        return make_error(status, 404, message)
+        return make_json_response(status, 404, message)

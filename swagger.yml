@@ -93,7 +93,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PartialUser'
-        required: false
+        required: true
       responses:
         200:
           description: OK
@@ -124,8 +124,25 @@ paths:
           type: integer
       responses:
         200:
-          description: Success!
-          content: {}
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: OK
+                code: 200
+                message: User 123456123456123456 deleted
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: Not Found
+                code: 404
+                message: User 123456123456123456 not found
   /users/{id}/password:
     put:
       tags:
