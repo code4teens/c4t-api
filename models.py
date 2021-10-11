@@ -17,6 +17,7 @@ from database import Base
 class User(Base):
     __tablename__ = 'user'
     id = Column(BigInteger, primary_key=True)
+    password = Column(String(60), nullable=False)
     name = Column(String(64), nullable=False)
     discriminator = Column(String(4), nullable=False)
     display_name = Column(String(64), nullable=False)
@@ -30,6 +31,20 @@ class User(Base):
     )
 
     bots = relationship('Bot', back_populates='user', order_by='Bot.id')
+
+    # def __init__(
+    #     self, id, password, name, discriminator, display_name, cohort_id,
+    #     is_admin=False
+    # ):
+    #     self.id = id
+    #     self.password = bcrypt.hashpw(
+    #         password.encode('utf-8'), bcrypt.gensalt()
+    #     )
+    #     self.name = name
+    #     self.discriminator = discriminator
+    #     self.display_name = display_name
+    #     self.cohort_id = cohort_id
+    #     self.is_admin = is_admin
 
 
 class Bot(Base):
@@ -52,6 +67,7 @@ class Bot(Base):
 
 class UserSchema(Schema):
     id = fields.Integer()
+    password = fields.String()
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()

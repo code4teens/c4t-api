@@ -87,7 +87,6 @@ paths:
             application/json:
               schema:
                 type: object
-      x-codegen-request-body-name: user_data
   /users/{id}:
     get:
       tags:
@@ -142,7 +141,6 @@ paths:
             application/json:
               schema:
                 type: object
-      x-codegen-request-body-name: user_data
     delete:
       tags:
       - User
@@ -158,6 +156,50 @@ paths:
         200:
           description: Success!
           content: {}
+  /users/{id}/password:
+    put:
+      tags:
+      - User
+      summary: Updates user password
+      operationId: user.update_password
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+            example:
+              password: new_password
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: OK
+                code: 200
+                message: Updated password for user 123456123456123456
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: Not Found
+                code: 404
+                message: User 123456123456123456 not found
   /bots:
     get:
       tags:
@@ -292,4 +334,20 @@ paths:
         200:
           description: Success!
           content: {}
-components: {}
+components:
+  schemas:
+    response:
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+# security:
+#   - bearerAuth: []

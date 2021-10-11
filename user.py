@@ -1,4 +1,5 @@
-from flask import abort, make_response
+from flask import abort, jsonify, make_response
+import bcrypt
 
 from database import db_session
 from models import User, UserSchema
@@ -14,13 +15,13 @@ def get_all():
 
 
 # POST users
-def create(user_data):
-    id = user_data.get('id')
+def create(body):
+    id = body.get('id')
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
         user_schema = UserSchema()
-        user = user_schema.load(user_data)
+        user = user_schema.load(body)
         db_session.add(user)
         db_session.commit()
         data = user_schema.dump(user)
@@ -44,12 +45,12 @@ def get_one(id):
 
 
 # PUT users/<id>
-def update(id, user_data):
+def update(id, body):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
         user_schema = UserSchema()
-        user = user_schema.load(user_data)
+        user = user_schema.load(body)
         user.id = existing_user.id
         db_session.merge(user)
         db_session.commit()
@@ -70,3 +71,32 @@ def delete(id):
         return make_response(f'User for ID: {id} deleted', 200)
     else:
         abort(404, f'User not found for ID: {id}')
+
+
+# PUT users/<id>/password
+def update_password(id, body):
+    existing_user = User.query.filter_by(id=id).one_or_none()
+
+    if existing_user is not None:
+        user = UserSchema().load(body)
+        user.id = existing_user.id
+        user.password = bcrypt.hashpw(
+            body.get('password').encode('utf-8'), bcrypt.gensalt()
+        )
+        db_session.merge(user)
+        db_session.commit()
+        response_object = {
+            'status': 'OK',
+            'code': 200,
+            'message': f'Updated password for user {id}'
+        }
+
+        return make_response(jsonify(response_object)), 200
+    else:
+        response_object = {
+            'status': 'Not Found',
+            'code': 404,
+            'message': f'User {id} not found'
+        }
+
+        return make_response(jsonify(response_object)), 404
