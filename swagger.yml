@@ -1,26 +1,71 @@
-swagger: "2.0"
+openapi: 3.0.3
 info:
   title: Code4Teens REST API
-  version: "1.0.0"
-basePath: /api/v1
-consumes:
-  - application/json
-produces:
-  - application/json
-
+  version: 1.0.0
+servers:
+- url: /api/v1
 paths:
   /users:
     get:
-      operationId: user.get_all
       tags:
-        - User
+      - User
       summary: Returns all users
+      operationId: user.get_all
       responses:
         200:
           description: Success!
-          schema:
-            type: array
-            items:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    discriminator:
+                      type: string
+                    display_name:
+                      type: string
+                    cohort_id:
+                      type: integer
+                    is_admin:
+                      type: boolean
+                    created_at:
+                      type: string
+                    last_updated:
+                      type: string
+                    bots:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          discriminator:
+                            type: string
+                          display_name:
+                            type: string
+                          msg_id:
+                            type: integer
+                          created_at:
+                            type: string
+                          last_updated:
+                            type: string
+    post:
+      tags:
+      - User
+      summary: Creates user
+      operationId: user.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
                 id:
                   type: integer
@@ -34,162 +79,51 @@ paths:
                   type: integer
                 is_admin:
                   type: boolean
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-                bots:
-                  type: array
-                  items:
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                      discriminator:
-                        type: string
-                      display_name:
-                        type: string
-                      msg_id:
-                        type: integer
-                      created_at:
-                        type: string
-                      last_updated:
-                        type: string
-
-    post:
-      operationId: user.create
-      tags:
-        - User
-      summary: Creates user
-      parameters:
-        - name: user_data
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              cohort_id:
-                type: integer
-              is_admin:
-                type: boolean
+        required: true
       responses:
         201:
           description: Success!
-          schema:
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              cohort_id:
-                type: integer
-              is_admin:
-                type: boolean
-              created_at:
-                type: string
-              last_updated:
-                type: string
-
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: user_data
   /users/{id}:
     get:
-      operationId: user.get_one
       tags:
-        - User
+      - User
       summary: Returns user
+      operationId: user.get_one
       parameters:
-        - name: id
-          in: path
+      - name: id
+        in: path
+        required: true
+        schema:
           type: integer
-          required: true
       responses:
         200:
           description: Success!
-          schema:
-            type: object
-            items:
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                cohort_id:
-                  type: integer
-                is_admin:
-                  type: boolean
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-                bots:
-                  type: array
-                  items:
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                      discriminator:
-                        type: string
-                      display_name:
-                        type: string
-                      msg_id:
-                        type: integer
-                      created_at:
-                        type: string
-                      last_updated:
-                        type: string
-
+          content:
+            application/json:
+              schema:
+                type: object
     put:
-      operationId: user.update
       tags:
-        - User
+      - User
       summary: Updates user
+      operationId: user.update
       parameters:
-        - name: id
-          in: path
+      - name: id
+        in: path
+        required: true
+        schema:
           type: integer
-          required: true
-        - name: user_data
-          in: body
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              cohort_id:
-                type: integer
-              is_admin:
-                type: boolean
-      responses:
-        200:
-          description: Success!
-          schema:
-            type: object
-            items:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
-                id:
-                  type: integer
                 name:
                   type: string
                 discriminator:
@@ -200,37 +134,72 @@ paths:
                   type: integer
                 is_admin:
                   type: boolean
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-
-    delete:
-      operationId: user.delete
-      tags:
-        - User
-      summary: Deletes user
-      parameters:
-        - name: id
-          in: path
-          type: integer
-          required: true
+        required: false
       responses:
         200:
           description: Success!
-
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: user_data
+    delete:
+      tags:
+      - User
+      summary: Deletes user
+      operationId: user.delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success!
+          content: {}
   /bots:
     get:
-      operationId: bot.get_all
       tags:
-        - Bot
+      - Bot
       summary: Returns all bots
+      operationId: bot.get_all
       responses:
         200:
           description: Success!
-          schema:
-            type: array
-            items:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    discriminator:
+                      type: string
+                    display_name:
+                      type: string
+                    user_id:
+                      type: integer
+                    msg_id:
+                      type: integer
+                    created_at:
+                      type: string
+                    last_updated:
+                      type: string
+    post:
+      tags:
+      - Bot
+      summary: Creates bot
+      operationId: bot.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
                 id:
                   type: integer
@@ -244,126 +213,51 @@ paths:
                   type: integer
                 msg_id:
                   type: integer
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-
-    post:
-      operationId: bot.create
-      tags:
-        - Bot
-      summary: Creates bot
-      parameters:
-        - name: bot_data
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              user_id:
-                type: integer
-              msg_id:
-                type: integer
+        required: true
       responses:
         201:
           description: Success!
-          schema:
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              user_id:
-                type: integer
-              msg_id:
-                type: integer
-              created_at:
-                type: string
-              last_updated:
-                type: string
-
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: bot_data
   /bots/{id}:
     get:
-      operationId: bot.get_one
       tags:
-        - Bot
+      - Bot
       summary: Returns bot
+      operationId: bot.get_one
       parameters:
-        - name: id
-          in: path
+      - name: id
+        in: path
+        required: true
+        schema:
           type: integer
-          required: true
       responses:
         200:
           description: Success!
-          schema:
-            type: object
-            items:
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                user_id:
-                  type: integer
-                msg_id:
-                  type: integer
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-
+          content:
+            application/json:
+              schema:
+                type: object
     put:
-      operationId: bot.update
       tags:
-        - Bot
+      - Bot
       summary: Updates bot
+      operationId: bot.update
       parameters:
-        - name: id
-          in: path
+      - name: id
+        in: path
+        required: true
+        schema:
           type: integer
-          required: true
-        - name: bot_data
-          in: body
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              discriminator:
-                type: string
-              display_name:
-                type: string
-              user_id:
-                type: integer
-              msg_id:
-                type: integer
-      responses:
-        200:
-          description: Success!
-          schema:
-            type: object
-            items:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
-                id:
-                  type: integer
                 name:
                   type: string
                 discriminator:
@@ -374,21 +268,28 @@ paths:
                   type: integer
                 msg_id:
                   type: integer
-                created_at:
-                  type: string
-                last_updated:
-                  type: string
-
-    delete:
-      operationId: bot.delete
-      tags:
-        - Bot
-      summary: Deletes bot
-      parameters:
-        - name: id
-          in: path
-          type: integer
-          required: true
+        required: false
       responses:
         200:
           description: Success!
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: bot_data
+    delete:
+      tags:
+      - Bot
+      summary: Deletes bot
+      operationId: bot.delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success!
+          content: {}
+components: {}
