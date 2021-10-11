@@ -1,4 +1,4 @@
-from flask import abort
+from flask import abort, make_response
 
 from database import db_session
 from models import Bot, BotSchema
@@ -39,5 +39,34 @@ def get_one(id):
         data = bot_schema.dump(existing_bot)
 
         return data
+    else:
+        abort(404, f'Bot not found for ID: {id}')
+
+
+# PUT bots/<id>
+def update(id, bot_data):
+    existing_bot = Bot.query.filter_by(id=id).one_or_none()
+
+    if existing_bot is not None:
+        bot_schema = BotSchema()
+        bot = bot_schema.load(bot_data)
+        bot.id = existing_bot.id
+        db_session.merge(bot)
+        db_session.commit()
+        data = bot_schema.dump(existing_bot)
+
+        return data
+    else:
+        abort(404, f'Bot not found for ID: {id}')
+
+
+# DELETE bots/<id>
+def delete(id):
+    existing_bot = Bot.query.filter_by(id=id).one_or_none()
+
+    if existing_bot is not None:
+        db_session.delete(existing_bot)
+        db_session.commit()
+        return make_response(f'Bot for ID: {id} deleted', 200)
     else:
         abort(404, f'Bot not found for ID: {id}')
