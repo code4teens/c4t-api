@@ -5,11 +5,20 @@ from database import db_session
 from models import User, UserSchema
 
 
+def make_404(message):
+    response_object = {
+        'status': 'Not Found',
+        'code': 404,
+        'message': message
+    }
+
+    return make_response(jsonify(response_object)), 404
+
+
 # GET users
 def get_all():
     user = User.query.order_by(User.id).all()
-    user_schema = UserSchema(many=True)
-    data = user_schema.dump(user)
+    data = UserSchema(many=True, exclude=['password']).dump(user)
 
     return data
 
@@ -93,10 +102,6 @@ def update_password(id, body):
 
         return make_response(jsonify(response_object)), 200
     else:
-        response_object = {
-            'status': 'Not Found',
-            'code': 404,
-            'message': f'User {id} not found'
-        }
+        message = f'User {id} not found'
 
-        return make_response(jsonify(response_object)), 404
+        return make_404(message)

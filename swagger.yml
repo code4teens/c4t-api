@@ -13,49 +13,13 @@ paths:
       operationId: user.get_all
       responses:
         200:
-          description: Success!
+          description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    name:
-                      type: string
-                    discriminator:
-                      type: string
-                    display_name:
-                      type: string
-                    cohort_id:
-                      type: integer
-                    is_admin:
-                      type: boolean
-                    created_at:
-                      type: string
-                    last_updated:
-                      type: string
-                    bots:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          name:
-                            type: string
-                          discriminator:
-                            type: string
-                          display_name:
-                            type: string
-                          msg_id:
-                            type: integer
-                          created_at:
-                            type: string
-                          last_updated:
-                            type: string
+                  $ref: '#/components/schemas/User'
     post:
       tags:
       - User
@@ -334,6 +298,61 @@ paths:
           content: {}
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123456123456123456
+        name:
+          type: string
+          example: johndoe
+        discriminator:
+          type: string
+          example: '4242'
+        display_name:
+          type: string
+          example: John Doe
+        cohort_id:
+          type: integer
+          example: 1
+        is_admin:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          example: '2021-04-20T08:42:00'
+        last_updated:
+          type: string
+          example: '2021-04-20T08:42:00'
+        bots:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArrayOfBot'
+    ArrayOfBot:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 654321654321654321
+        name:
+          type: string
+          example: clockwork
+        discriminator:
+          type: string
+          example: '2121'
+        display_name:
+          type: string
+          example: 'Clockwork the Bot'
+        msg_id:
+          type: integer
+          example: 456123456123456123
+        created_at:
+          type: string
+          example: '2021-04-20T08:42:00'
+        last_updated:
+          type: string
+          example: '2021-04-20T08:42:00'
     response:
       properties:
         status:
