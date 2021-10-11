@@ -294,3 +294,38 @@ paths:
                 type: string
               last_updated:
                 type: string
+
+  /bots/{id}:
+    get:
+      operationId: bot.get_one
+      tags:
+        - Bot
+      summary: Returns bot
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Success!
+          schema:
+            type: object
+            items:
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                discriminator:
+                  type: string
+                display_name:
+                  type: string
+                user_id:
+                  type: integer
+                msg_id:
+                  type: integer
+                created_at:
+                  type: string
+                last_updated:
+                  type: string
