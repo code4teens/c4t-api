@@ -29,13 +29,13 @@ def create(body):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
-        user_schema = UserSchema(exclude=['password'])
+        user_schema = UserSchema(exclude=['password', 'bots'])
         user = user_schema.load(body)
         db_session.add(user)
         db_session.commit()
         data = user_schema.dump(user)
 
-        return data
+        return data, 201
     else:
         status = 'Conflict'
         message = f'User {id} already exists'
@@ -101,7 +101,7 @@ def update_password(id, body):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        user = UserSchema(exclude=['password', 'bots']).load(body)
+        user = UserSchema().load(body)
         user.id = existing_user.id
         user.password = bcrypt.hashpw(
             body.get('password').encode('utf-8'), bcrypt.gensalt()
