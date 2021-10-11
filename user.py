@@ -5,14 +5,14 @@ from database import db_session
 from models import User, UserSchema
 
 
-def make_404(message):
+def make_error(status, code, message):
     response_object = {
-        'status': 'Not Found',
-        'code': 404,
+        'status': status,
+        'code': code,
         'message': message
     }
 
-    return make_response(jsonify(response_object)), 404
+    return make_response(jsonify(response_object)), code
 
 
 # GET users
@@ -29,7 +29,7 @@ def create(body):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
-        user_schema = UserSchema()
+        user_schema = UserSchema(exclude=['password'])
         user = user_schema.load(body)
         db_session.add(user)
         db_session.commit()
@@ -37,7 +37,10 @@ def create(body):
 
         return data
     else:
-        abort(409, f'User for ID: {id} already exists')
+        status = 'Conflict'
+        message = f'User {id} already exists'
+
+        return make_error(status, 409, message)
 
 
 # GET users/<id>
@@ -102,6 +105,7 @@ def update_password(id, body):
 
         return make_response(jsonify(response_object)), 200
     else:
+        status = 'Not Found'
         message = f'User {id} not found'
 
-        return make_404(message)
+        return make_error(status, 404, message)

@@ -19,7 +19,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/ExtendedUser'
     post:
       tags:
       - User
@@ -29,28 +29,25 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                cohort_id:
-                  type: integer
-                is_admin:
-                  type: boolean
+              $ref: '#/components/schemas/BasicUser'
         required: true
       responses:
         201:
-          description: Success!
+          description: Created
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/User'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: Conflict
+                code: 409
+                message: User 123456123456123456 already exists
   /users/{id}:
     get:
       tags:
@@ -298,12 +295,9 @@ paths:
           content: {}
 components:
   schemas:
-    User:
+    PartialUser:
       type: object
       properties:
-        id:
-          type: integer
-          example: 123456123456123456
         name:
           type: string
           example: johndoe
@@ -319,17 +313,35 @@ components:
         is_admin:
           type: boolean
           example: false
-        created_at:
-          type: string
-          example: '2021-04-20T08:42:00'
-        last_updated:
-          type: string
-          example: '2021-04-20T08:42:00'
-        bots:
-          type: array
-          items:
-            $ref: '#/components/schemas/ArrayOfBot'
-    ArrayOfBot:
+    BasicUser:
+      allOf:
+        - $ref: '#/components/schemas/PartialUser'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 123456123456123456
+    User:
+      allOf:
+        - $ref: '#/components/schemas/BasicUser'
+        - type: object
+          properties:
+            created_at:
+              type: string
+              example: '2021-04-20T08:42:00'
+            last_updated:
+              type: string
+              example: '2021-04-20T08:42:00'
+    ExtendedUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            bots:
+              type: array
+              items:
+                $ref: '#/components/schemas/Bot'
+    Bot:
       type: object
       properties:
         id:
