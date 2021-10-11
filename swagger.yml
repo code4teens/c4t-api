@@ -92,26 +92,25 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                cohort_id:
-                  type: integer
-                is_admin:
-                  type: boolean
+              $ref: '#/components/schemas/PartialUser'
         required: false
       responses:
         200:
-          description: Success!
+          description: OK
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/User'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: Not Found
+                code: 404
+                message: User 123456123456123456 not found
     delete:
       tags:
       - User
