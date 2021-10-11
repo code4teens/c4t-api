@@ -62,11 +62,21 @@ paths:
           type: integer
       responses:
         200:
-          description: Success!
+          description: OK
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/ExtendedUser'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              example:
+                status: Not Found
+                code: 404
+                message: User 123456123456123456 not found
     put:
       tags:
       - User

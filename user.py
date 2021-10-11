@@ -48,12 +48,12 @@ def get_one(id):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        user_schema = UserSchema()
-        data = user_schema.dump(existing_user)
-
-        return data
+        return UserSchema(exclude=['password']).dump(existing_user)
     else:
-        abort(404, f'User not found for ID: {id}')
+        status = 'Not Found'
+        message = f'User {id} not found'
+
+        return make_error(status, 404, message)
 
 
 # PUT users/<id>
