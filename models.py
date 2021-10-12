@@ -83,19 +83,20 @@ class UserSchema(Schema):
         return User(**data)
 
 
-class NestedBotSchema(Schema):
+class BotSchema(Schema):
     id = fields.Integer()
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
+    user_id = fields.Integer()
     msg_id = fields.Integer()
     created_at = fields.DateTime()
     last_updated = fields.DateTime()
 
-
-class BotSchema(NestedBotSchema):
-    user_id = fields.Integer()
-
     @post_load
     def make_bot(self, data, **kwargs):
         return Bot(**data)
+
+
+class NestedBotSchema(Schema):
+    id = fields.Integer()
