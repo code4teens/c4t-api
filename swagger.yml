@@ -23,15 +23,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserBots'
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
     post:
       security:
       - bearerAuth: []
@@ -53,25 +45,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Forbidden
-                status: 403
-                detail: Insufficient permission to access resource
+          $ref: '#/components/responses/403Forbidden'
         409:
           description: Conflict
           content:
@@ -104,25 +80,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserBots'
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: User 123456123456123456 not found
+          $ref: '#/components/responses/404UserNotFound'
     put:
       security:
       - bearerAuth: []
@@ -150,35 +110,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Forbidden
-                status: 403
-                detail: Insufficient permission to access resource
+          $ref: '#/components/responses/403Forbidden'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: User 123456123456123456 not found
+          $ref: '#/components/responses/404UserNotFound'
     delete:
       security:
       - bearerAuth: []
@@ -204,35 +140,11 @@ paths:
                 status: 200
                 detail: User 123456123456123456 deleted
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Forbidden
-                status: 403
-                detail: Insufficient permission to access resource
+          $ref: '#/components/responses/403Forbidden'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: User 123456123456123456 not found
+          $ref: '#/components/responses/404UserNotFound'
   /users/{id}/password:
     put:
       security:
@@ -270,35 +182,11 @@ paths:
                 status: 200
                 detail: Updated password for user 123456123456123456
         401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Unauthorised
-                status: 401
-                detail: Missing, invalid or expired token
+          $ref: '#/components/responses/401Unauthorised'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Forbidden
-                status: 403
-                detail: Insufficient permission to access resource
+          $ref: '#/components/responses/403Forbidden'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: User 123456123456123456 not found
+          $ref: '#/components/responses/404UserNotFound'
   /users/{id}/login:
     post:
       tags:
@@ -343,15 +231,7 @@ paths:
                 status: 401
                 detail: Wrong password for user 123456123456123456
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: User 123456123456123456 not found
+          $ref: '#/components/responses/404UserNotFound'
   /bots:
     get:
       tags:
@@ -415,15 +295,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bot'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: Bot 654321654321654321 not found
+          $ref: '#/components/responses/404BotNotFound'
     put:
       tags:
       - Bot
@@ -449,15 +321,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bot'
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: Bot 654321654321654321 not found
+          $ref: '#/components/responses/404BotNotFound'
     delete:
       tags:
       - Bot
@@ -481,15 +345,7 @@ paths:
                 status: 200
                 detail: Bot 654321654321654321 deleted
         404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Not Found
-                status: 404
-                detail: Bot 654321654321654321 not found
+          $ref: '#/components/responses/404BotNotFound'
 components:
   schemas:
     PartialUser:
@@ -587,6 +443,47 @@ components:
           type: integer
         detail:
           type: string
+  responses:
+    401Unauthorised:
+      description: Unauthorised
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Unauthorised
+            status: 401
+            detail: Missing, invalid or expired token
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Forbidden
+            status: 403
+            detail: Insufficient permission to access resource
+    404UserNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Not Found
+            status: 404
+            detail: User 123456123456123456 not found
+    404BotNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Not Found
+            status: 404
+            detail: Bot 654321654321654321 not found
   securitySchemes:
     bearerAuth:
       type: http
