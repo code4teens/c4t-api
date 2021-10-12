@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+import os
+
 from marshmallow import fields, post_load, Schema
 from sqlalchemy import (
     BigInteger,
@@ -10,8 +13,10 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.orm import relationship
+import jwt
 
 from database import Base
+from utils import tz
 
 
 class User(Base):
@@ -32,19 +37,27 @@ class User(Base):
 
     bots = relationship('Bot', back_populates='user', order_by='Bot.id')
 
-    # def __init__(
-    #     self, id, password, name, discriminator, display_name, cohort_id,
-    #     is_admin=False
-    # ):
-    #     self.id = id
-    #     self.password = bcrypt.hashpw(
-    #         password.encode('utf-8'), bcrypt.gensalt()
-    #     )
-    #     self.name = name
-    #     self.discriminator = discriminator
-    #     self.display_name = display_name
-    #     self.cohort_id = cohort_id
-    #     self.is_admin = is_admin
+    def encode_auth_token(self, id):
+        try:
+            payload = {
+                'exp': datetime.now(tz) + timedelta(seconds=1200),
+                'iat': datetime.now(tz),
+                'sub': id
+            }
+
+            return jwt.encode(
+                payload,
+                os.environ.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        return jwt.decode(
+            auth_token, os.environ.get('SECRET_KEY'), algorithms=['HS256']
+        )
 
 
 class Bot(Base):

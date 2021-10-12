@@ -107,3 +107,30 @@ def update_password(id, body):
         message = f'User {id} not found'
 
         return make_json_response(status, 404, message)
+
+
+# POST users/<id>/login
+def login(id, body):
+    existing_user = User.query.filter_by(id=id).one_or_none()
+
+    if existing_user is not None:
+        if bcrypt.checkpw(
+            body.get('password').encode('utf-8'),
+            existing_user.password.encode('utf-8')
+        ):
+            auth_token = existing_user.encode_auth_token(id)
+            if auth_token:
+                status = 'OK'
+                message = f'Logged in as user {id} with token {auth_token}'
+
+                return make_json_response(status, 200, message)
+        else:
+            status = 'Unauthorised'
+            message = f'Wrong password for user {id}'
+
+            return make_json_response(status, 401, message)
+    else:
+        status = 'Not Found'
+        message = f'User {id} not found'
+
+        return make_json_response(status, 404, message)

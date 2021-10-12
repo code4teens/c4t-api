@@ -187,6 +187,59 @@ paths:
                 status: Not Found
                 code: 404
                 message: User 123456123456123456 not found
+  /users/{id}/login:
+    post:
+      tags:
+      - User
+      summary: Logs user in
+      operationId: user.login
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: password
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: OK
+                code: 200
+                message: Logged in as user 123456123456123456 with token abc
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: Unauthorised
+                code: 401
+                message: Wrong password for user 123456123456123456
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: Not Found
+                code: 404
+                message: User 123456123456123456 not found
   /bots:
     get:
       tags:
@@ -427,5 +480,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-# security:
-#   - bearerAuth: []
+      x-bearerInfoFunc: models.User.decode_auth_token

@@ -1,4 +1,7 @@
 from flask import jsonify, make_response
+import pytz
+
+tz = pytz.timezone('Asia/Kuala_Lumpur')
 
 
 def make_json_response(status, code, message):
