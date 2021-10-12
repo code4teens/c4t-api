@@ -33,6 +33,8 @@ paths:
                 status: 401
                 detail: Missing, invalid or expired token
     post:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Creates user
@@ -50,6 +52,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Forbidden
+                status: 403
+                detail: Insufficient permission to access resource
         409:
           description: Conflict
           content:
@@ -62,6 +84,8 @@ paths:
                 detail: User 123456123456123456 already exists
   /users/{id}:
     get:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Returns user
@@ -79,6 +103,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserBots'
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
         404:
           description: Not Found
           content:
@@ -90,6 +124,8 @@ paths:
                 status: 404
                 detail: User 123456123456123456 not found
     put:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Updates user
@@ -113,6 +149,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Forbidden
+                status: 403
+                detail: Insufficient permission to access resource
         404:
           description: Not Found
           content:
@@ -124,6 +180,8 @@ paths:
                 status: 404
                 detail: User 123456123456123456 not found
     delete:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Deletes user
@@ -145,6 +203,26 @@ paths:
                 title: OK
                 status: 200
                 detail: User 123456123456123456 deleted
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Forbidden
+                status: 403
+                detail: Insufficient permission to access resource
         404:
           description: Not Found
           content:
@@ -157,6 +235,8 @@ paths:
                 detail: User 123456123456123456 not found
   /users/{id}/password:
     put:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Updates user password
@@ -189,6 +269,26 @@ paths:
                 title: OK
                 status: 200
                 detail: Updated password for user 123456123456123456
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Forbidden
+                status: 403
+                detail: Insufficient permission to access resource
         404:
           description: Not Found
           content:
@@ -231,7 +331,7 @@ paths:
               example:
                 title: OK
                 status: 200
-                detail: Logged in as user 123456123456123456 with token abc
+                detail: Logged in as user 123456123456123456 with token xxxxx.yyyyy.zzzzz
         401:
           description: Unauthorised
           content:

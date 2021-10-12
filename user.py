@@ -7,23 +7,31 @@ from utils import make_json_response
 
 # GET users
 def get_all():
-    user = User.query.order_by(User.id).all()
-    data = UserSchema(many=True, exclude=['password']).dump(user)
+    users = User.query.order_by(User.id).all()
+    data = UserSchema(many=True, exclude=['password']).dump(users)
 
     return data
 
 
 # POST users
-def create(body):
+def create(user, body):
+    requester = User.query.filter_by(id=user).one_or_none()
+
+    if requester is None or not requester.is_admin:
+        title = 'Forbidden'
+        detail = 'Insufficient permission to access resource'
+
+        return make_json_response(title, 403, detail)
+
     id = body.get('id')
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
         user_schema = UserSchema(exclude=['password', 'bots'])
-        user = user_schema.load(body)
-        db_session.add(user)
+        new_user = user_schema.load(body)
+        db_session.add(new_user)
         db_session.commit()
-        data = user_schema.dump(user)
+        data = user_schema.dump(new_user)
 
         return data, 201
     else:
@@ -49,14 +57,24 @@ def get_one(id):
 
 
 # PUT users/<id>
-def update(id, body):
+def update(id, user, body):
+    requester = User.query.filter_by(id=user).one_or_none()
+
+    if requester is None or (
+        not requester.is_admin and (requester.id != id or body.get('is_admin'))
+    ):
+        title = 'Forbidden'
+        detail = 'Insufficient permission to access resource'
+
+        return make_json_response(title, 403, detail)
+
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
         user_schema = UserSchema(exclude=['password', 'bots'])
-        user = user_schema.load(body)
-        user.id = existing_user.id
-        db_session.merge(user)
+        updated_user = user_schema.load(body)
+        updated_user.id = existing_user.id
+        db_session.merge(updated_user)
         db_session.commit()
         data = user_schema.dump(existing_user)
 
@@ -69,7 +87,15 @@ def update(id, body):
 
 
 # DELETE users/<id>
-def delete(id):
+def delete(id, user):
+    requester = User.query.filter_by(id=user).one_or_none()
+
+    if requester is None or not requester.is_admin:
+        title = 'Forbidden'
+        detail = 'Insufficient permission to access resource'
+
+        return make_json_response(title, 403, detail)
+
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
@@ -87,7 +113,15 @@ def delete(id):
 
 
 # PUT users/<id>/password
-def update_password(id, body):
+def update_password(id, user, body):
+    requester = User.query.filter_by(id=user).one_or_none()
+
+    if requester is None or (not requester.is_admin and requester.id != id):
+        title = 'Forbidden'
+        detail = 'Insufficient permission to access resource'
+
+        return make_json_response(title, 403, detail)
+
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
