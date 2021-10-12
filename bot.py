@@ -62,7 +62,10 @@ def update(id, body):
 
         return data
     else:
-        abort(404, f'Bot not found for ID: {id}')
+        status = 'Not Found'
+        message = f'Bot {id} not found'
+
+        return make_json_response(status, 404, message)
 
 
 # DELETE bots/<id>

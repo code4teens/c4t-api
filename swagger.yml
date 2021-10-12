@@ -274,26 +274,25 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                user_id:
-                  type: integer
-                msg_id:
-                  type: integer
-        required: false
+              $ref: '#/components/schemas/PartialBot'
+        required: true
       responses:
         200:
-          description: Success!
+          description: OK
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Bot'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: Not Found
+                code: 404
+                message: Bot 654321654321654321 not found
     delete:
       tags:
       - Bot
