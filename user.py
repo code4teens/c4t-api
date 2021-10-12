@@ -27,10 +27,10 @@ def create(body):
 
         return data, 201
     else:
-        status = 'Conflict'
-        message = f'User {id} already exists'
+        title = 'Conflict'
+        detail = f'User {id} already exists'
 
-        return make_json_response(status, 409, message)
+        return make_json_response(title, 409, detail)
 
 
 # GET users/<id>
@@ -42,10 +42,10 @@ def get_one(id):
 
         return data
     else:
-        status = 'Not Found'
-        message = f'User {id} not found'
+        title = 'Not Found'
+        detail = f'User {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # PUT users/<id>
@@ -62,10 +62,10 @@ def update(id, body):
 
         return data
     else:
-        status = 'Not Found'
-        message = f'User {id} not found'
+        title = 'Not Found'
+        detail = f'User {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # DELETE users/<id>
@@ -75,15 +75,15 @@ def delete(id):
     if existing_user is not None:
         db_session.delete(existing_user)
         db_session.commit()
-        status = 'OK'
-        message = f'User {id} deleted'
+        title = 'OK'
+        detail = f'User {id} deleted'
 
-        return make_json_response(status, 200, message)
+        return make_json_response(title, 200, detail)
     else:
-        status = 'Not Found'
-        message = f'User {id} not found'
+        title = 'Not Found'
+        detail = f'User {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # PUT users/<id>/password
@@ -98,15 +98,15 @@ def update_password(id, body):
         )
         db_session.merge(user)
         db_session.commit()
-        status = 'OK'
-        message = f'Updated password for user {id}'
+        title = 'OK'
+        detail = f'Updated password for user {id}'
 
-        return make_json_response(status, 200, message)
+        return make_json_response(title, 200, detail)
     else:
-        status = 'Not Found'
-        message = f'User {id} not found'
+        title = 'Not Found'
+        detail = f'User {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # POST users/<id>/login
@@ -120,17 +120,17 @@ def login(id, body):
         ):
             auth_token = existing_user.encode_auth_token(id)
             if auth_token:
-                status = 'OK'
-                message = f'Logged in as user {id} with token {auth_token}'
+                title = 'OK'
+                detail = f'Logged in as user {id} with token {auth_token}'
 
-                return make_json_response(status, 200, message)
+                return make_json_response(title, 200, detail)
         else:
-            status = 'Unauthorised'
-            message = f'Wrong password for user {id}'
+            title = 'Unauthorised'
+            detail = f'Wrong password for user {id}'
 
-            return make_json_response(status, 401, message)
+            return make_json_response(title, 401, detail)
     else:
-        status = 'Not Found'
-        message = f'User {id} not found'
+        title = 'Not Found'
+        detail = f'User {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)

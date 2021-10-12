@@ -7,6 +7,8 @@ servers:
 paths:
   /users:
     get:
+      security:
+      - bearerAuth: []
       tags:
       - User
       summary: Returns all users
@@ -20,6 +22,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserBots'
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Unauthorised
+                status: 401
+                detail: Missing, invalid or expired token
     post:
       tags:
       - User
@@ -45,9 +57,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Conflict
-                code: 409
-                message: User 123456123456123456 already exists
+                title: Conflict
+                status: 409
+                detail: User 123456123456123456 already exists
   /users/{id}:
     get:
       tags:
@@ -74,9 +86,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: User 123456123456123456 not found
+                title: Not Found
+                status: 404
+                detail: User 123456123456123456 not found
     put:
       tags:
       - User
@@ -108,9 +120,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: User 123456123456123456 not found
+                title: Not Found
+                status: 404
+                detail: User 123456123456123456 not found
     delete:
       tags:
       - User
@@ -130,9 +142,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: OK
-                code: 200
-                message: User 123456123456123456 deleted
+                title: OK
+                status: 200
+                detail: User 123456123456123456 deleted
         404:
           description: Not Found
           content:
@@ -140,9 +152,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: User 123456123456123456 not found
+                title: Not Found
+                status: 404
+                detail: User 123456123456123456 not found
   /users/{id}/password:
     put:
       tags:
@@ -174,9 +186,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: OK
-                code: 200
-                message: Updated password for user 123456123456123456
+                title: OK
+                status: 200
+                detail: Updated password for user 123456123456123456
         404:
           description: Not Found
           content:
@@ -184,9 +196,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: User 123456123456123456 not found
+                title: Not Found
+                status: 404
+                detail: User 123456123456123456 not found
   /users/{id}/login:
     post:
       tags:
@@ -217,9 +229,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: OK
-                code: 200
-                message: Logged in as user 123456123456123456 with token abc
+                title: OK
+                status: 200
+                detail: Logged in as user 123456123456123456 with token abc
         401:
           description: Unauthorised
           content:
@@ -227,9 +239,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Unauthorised
-                code: 401
-                message: Wrong password for user 123456123456123456
+                title: Unauthorised
+                status: 401
+                detail: Wrong password for user 123456123456123456
         404:
           description: Not Found
           content:
@@ -237,9 +249,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: User 123456123456123456 not found
+                title: Not Found
+                status: 404
+                detail: User 123456123456123456 not found
   /bots:
     get:
       tags:
@@ -280,9 +292,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Conflict
-                code: 409
-                message: Bot 654321654321654321 already exists
+                title: Conflict
+                status: 409
+                detail: Bot 654321654321654321 already exists
   /bots/{id}:
     get:
       tags:
@@ -309,9 +321,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: Bot 654321654321654321 not found
+                title: Not Found
+                status: 404
+                detail: Bot 654321654321654321 not found
     put:
       tags:
       - Bot
@@ -343,9 +355,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: Bot 654321654321654321 not found
+                title: Not Found
+                status: 404
+                detail: Bot 654321654321654321 not found
     delete:
       tags:
       - Bot
@@ -365,9 +377,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: OK
-                code: 200
-                message: Bot 654321654321654321 deleted
+                title: OK
+                status: 200
+                detail: Bot 654321654321654321 deleted
         404:
           description: Not Found
           content:
@@ -375,9 +387,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Response'
               example:
-                status: Not Found
-                code: 404
-                message: Bot 654321654321654321 not found
+                title: Not Found
+                status: 404
+                detail: Bot 654321654321654321 not found
 components:
   schemas:
     PartialUser:
@@ -469,11 +481,11 @@ components:
               example: '2021-04-20T08:42:00'
     Response:
       properties:
-        status:
+        title:
           type: string
-        code:
+        status:
           type: integer
-        message:
+        detail:
           type: string
   securitySchemes:
     bearerAuth:

@@ -25,10 +25,10 @@ def create(body):
 
         return data, 201
     else:
-        status = 'Conflict'
-        message = f'Bot {id} already exists'
+        title = 'Conflict'
+        detail = f'Bot {id} already exists'
 
-        return make_json_response(status, 409, message)
+        return make_json_response(title, 409, detail)
 
 
 # GET bots/<id>
@@ -40,10 +40,10 @@ def get_one(id):
 
         return data
     else:
-        status = 'Not Found'
-        message = f'Bot {id} not found'
+        title = 'Not Found'
+        detail = f'Bot {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # PUT bots/<id>
@@ -60,10 +60,10 @@ def update(id, body):
 
         return data
     else:
-        status = 'Not Found'
-        message = f'Bot {id} not found'
+        title = 'Not Found'
+        detail = f'Bot {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)
 
 
 # DELETE bots/<id>
@@ -73,12 +73,12 @@ def delete(id):
     if existing_bot is not None:
         db_session.delete(existing_bot)
         db_session.commit()
-        status = 'OK'
-        message = f'Bot {id} deleted'
+        title = 'OK'
+        detail = f'Bot {id} deleted'
 
-        return make_json_response(status, 200, message)
+        return make_json_response(title, 200, detail)
     else:
-        status = 'Not Found'
-        message = f'Bot {id} not found'
+        title = 'Not Found'
+        detail = f'Bot {id} not found'
 
-        return make_json_response(status, 404, message)
+        return make_json_response(title, 404, detail)

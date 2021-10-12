@@ -4,11 +4,11 @@ import pytz
 tz = pytz.timezone('Asia/Kuala_Lumpur')
 
 
-def make_json_response(status, code, message):
+def make_json_response(title, status, detail):
     response_object = {
+        'title': title,
         'status': status,
-        'code': code,
-        'message': message
+        'detail': detail
     }
 
-    return make_response(jsonify(response_object)), code
+    return make_response(jsonify(response_object)), status
