@@ -23,7 +23,7 @@ def create(body):
         db_session.commit()
         data = bot_schema.dump(user)
 
-        return data
+        return data, 201
     else:
         status = 'Conflict'
         message = f'Bot {id} already exists'
