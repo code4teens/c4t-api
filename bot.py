@@ -38,12 +38,14 @@ def get_one(id):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
     if existing_bot is not None:
-        bot_schema = BotSchema()
-        data = bot_schema.dump(existing_bot)
+        data = BotSchema().dump(existing_bot)
 
         return data
     else:
-        abort(404, f'Bot not found for ID: {id}')
+        status = 'Not Found'
+        message = f'Bot {id} not found'
+
+        return make_json_response(status, 404, message)
 
 
 # PUT bots/<id>
