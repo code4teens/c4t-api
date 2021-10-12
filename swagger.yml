@@ -306,8 +306,25 @@ paths:
           type: integer
       responses:
         200:
-          description: Success!
-          content: {}
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: OK
+                code: 200
+                message: Bot 654321654321654321 deleted
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: Not Found
+                code: 404
+                message: Bot 654321654321654321 not found
 components:
   schemas:
     PartialUser:

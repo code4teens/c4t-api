@@ -1,5 +1,3 @@
-from flask import abort, make_response
-
 from database import db_session
 from models import Bot, BotSchema
 from utils import make_json_response
@@ -75,6 +73,12 @@ def delete(id):
     if existing_bot is not None:
         db_session.delete(existing_bot)
         db_session.commit()
-        return make_response(f'Bot for ID: {id} deleted', 200)
+        status = 'OK'
+        message = f'Bot {id} deleted'
+
+        return make_json_response(status, 200, message)
     else:
-        abort(404, f'Bot not found for ID: {id}')
+        status = 'Not Found'
+        message = f'Bot {id} not found'
+
+        return make_json_response(status, 404, message)
