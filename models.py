@@ -37,12 +37,13 @@ class User(Base):
 
     bots = relationship('Bot', back_populates='user', order_by='Bot.id')
 
-    def encode_auth_token(self, id):
+    def encode_auth_token(self, id, is_admin):
         try:
             payload = {
                 'exp': datetime.now(tz) + timedelta(seconds=1200),
                 'iat': datetime.now(tz),
-                'sub': id
+                'sub': id,
+                'is_admin': is_admin
             }
 
             return jwt.encode(

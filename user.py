@@ -2,7 +2,7 @@ import bcrypt
 
 from database import db_session
 from models import User, UserSchema
-from utils import make_json_response
+from utils import admin_only, admin_or_owner_only, make_json_response
 
 
 # GET users
@@ -14,15 +14,8 @@ def get_all():
 
 
 # POST users
-def create(user, body):
-    requester = User.query.filter_by(id=user).one_or_none()
-
-    if requester is None or not requester.is_admin:
-        title = 'Forbidden'
-        detail = 'Insufficient permission to access resource'
-
-        return make_json_response(title, 403, detail)
-
+@admin_only
+def create(body, **kwargs):
     id = body.get('id')
     existing_user = User.query.filter_by(id=id).one_or_none()
 
@@ -57,17 +50,8 @@ def get_one(id):
 
 
 # PUT users/<id>
-def update(id, user, body):
-    requester = User.query.filter_by(id=user).one_or_none()
-
-    if requester is None or (
-        not requester.is_admin and (requester.id != id or body.get('is_admin'))
-    ):
-        title = 'Forbidden'
-        detail = 'Insufficient permission to access resource'
-
-        return make_json_response(title, 403, detail)
-
+@admin_or_owner_only
+def update(id, body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
@@ -87,15 +71,8 @@ def update(id, user, body):
 
 
 # DELETE users/<id>
-def delete(id, user):
-    requester = User.query.filter_by(id=user).one_or_none()
-
-    if requester is None or not requester.is_admin:
-        title = 'Forbidden'
-        detail = 'Insufficient permission to access resource'
-
-        return make_json_response(title, 403, detail)
-
+@admin_only
+def delete(id, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
@@ -112,25 +89,24 @@ def delete(id, user):
         return make_json_response(title, 404, detail)
 
 
+# PUT users/<id>/is_admin
+@admin_only
+def update_is_admin(**kwargs):
+    update(**kwargs)
+
+
 # PUT users/<id>/password
-def update_password(id, user, body):
-    requester = User.query.filter_by(id=user).one_or_none()
-
-    if requester is None or (not requester.is_admin and requester.id != id):
-        title = 'Forbidden'
-        detail = 'Insufficient permission to access resource'
-
-        return make_json_response(title, 403, detail)
-
+@admin_or_owner_only
+def update_password(id, body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        user = UserSchema().load(body)
-        user.id = existing_user.id
-        user.password = bcrypt.hashpw(
+        updated_user = UserSchema().load(body)
+        updated_user.id = existing_user.id
+        updated_user.password = bcrypt.hashpw(
             body.get('password').encode('utf-8'), bcrypt.gensalt()
         )
-        db_session.merge(user)
+        db_session.merge(updated_user)
         db_session.commit()
         title = 'OK'
         detail = f'Updated password for user {id}'
@@ -152,10 +128,12 @@ def login(id, body):
             body.get('password').encode('utf-8'),
             existing_user.password.encode('utf-8')
         ):
-            auth_token = existing_user.encode_auth_token(id)
+            auth_token = existing_user.encode_auth_token(
+                id, existing_user.is_admin
+            )
             if auth_token:
                 title = 'OK'
-                detail = f'Logged in as user {id} with token {auth_token}'
+                detail = f'{auth_token}'
 
                 return make_json_response(title, 200, detail)
         else:

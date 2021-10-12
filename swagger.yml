@@ -145,6 +145,44 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404UserNotFound'
+  /users/{id}/is_admin:
+    put:
+      security:
+      - bearerAuth: []
+      tags:
+      - User
+      summary: Updates user authority
+      operationId: user.update_is_admin
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_admin:
+                  type: boolean
+            example:
+              is_admin: false
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404UserNotFound'
   /users/{id}/password:
     put:
       security:
@@ -363,9 +401,6 @@ components:
         cohort_id:
           type: integer
           example: 1
-        is_admin:
-          type: boolean
-          example: false
     NaiveUser:
       allOf:
         - $ref: '#/components/schemas/PartialUser'
@@ -374,6 +409,9 @@ components:
             id:
               type: integer
               example: 123456123456123456
+            is_admin:
+              type: boolean
+              example: false
     User:
       allOf:
         - $ref: '#/components/schemas/NaiveUser'
