@@ -1,18 +1,8 @@
-from flask import jsonify, make_response
 import bcrypt
 
 from database import db_session
 from models import User, UserSchema
-
-
-def make_json_response(status, code, message):
-    response_object = {
-        'status': status,
-        'code': code,
-        'message': message
-    }
-
-    return make_response(jsonify(response_object)), code
+from utils import make_json_response
 
 
 # GET users

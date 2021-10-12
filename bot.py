@@ -2,6 +2,7 @@ from flask import abort, make_response
 
 from database import db_session
 from models import Bot, BotSchema
+from utils import make_json_response
 
 
 # GET bots
@@ -26,7 +27,10 @@ def create(body):
 
         return data
     else:
-        abort(409, f'Bot for ID: {id} already exists')
+        status = 'Conflict'
+        message = f'Bot {id} already exists'
+
+        return make_json_response(status, 409, message)
 
 
 # GET bots/<id>

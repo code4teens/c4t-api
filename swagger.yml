@@ -211,28 +211,25 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
-                discriminator:
-                  type: string
-                display_name:
-                  type: string
-                user_id:
-                  type: integer
-                msg_id:
-                  type: integer
+              $ref: '#/components/schemas/NaiveBot'
         required: true
       responses:
         201:
-          description: Success!
+          description: Created
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Bot'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: Conflict
+                code: 409
+                message: Bot 654321654321654321 already exists
   /bots/{id}:
     get:
       tags:
