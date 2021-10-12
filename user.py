@@ -50,7 +50,7 @@ def get_one(id):
 
 
 # PUT users/<id>
-@admin_or_owner_only
+@admin_only
 def update(id, body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 

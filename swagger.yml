@@ -272,6 +272,8 @@ paths:
           $ref: '#/components/responses/404UserNotFound'
   /bots:
     get:
+      security:
+      - bearerAuth: []
       tags:
       - Bot
       summary: Returns all bots
@@ -285,7 +287,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Bot'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
     post:
+      security:
+      - bearerAuth: []
       tags:
       - Bot
       summary: Creates bot
@@ -303,6 +309,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bot'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
         409:
           description: Conflict
           content:
@@ -315,6 +325,8 @@ paths:
                 detail: Bot 654321654321654321 already exists
   /bots/{id}:
     get:
+      security:
+      - bearerAuth: []
       tags:
       - Bot
       summary: Returns bot
@@ -332,9 +344,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bot'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
         404:
           $ref: '#/components/responses/404BotNotFound'
     put:
+      security:
+      - bearerAuth: []
       tags:
       - Bot
       summary: Updates bot
@@ -358,9 +374,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bot'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404BotNotFound'
     delete:
+      security:
+      - bearerAuth: []
       tags:
       - Bot
       summary: Deletes bot
@@ -382,6 +404,10 @@ paths:
                 title: OK
                 status: 200
                 detail: Bot 654321654321654321 deleted
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404BotNotFound'
 components:

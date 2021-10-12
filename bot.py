@@ -1,6 +1,6 @@
 from database import db_session
 from models import Bot, BotSchema
-from utils import make_json_response
+from utils import admin_only, make_json_response
 
 
 # GET bots
@@ -12,6 +12,7 @@ def get_all():
 
 
 # POST bots
+@admin_only
 def create(body):
     id = body.get('id')
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
@@ -47,6 +48,7 @@ def get_one(id):
 
 
 # PUT bots/<id>
+@admin_only
 def update(id, body):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
@@ -67,6 +69,7 @@ def update(id, body):
 
 
 # DELETE bots/<id>
+@admin_only
 def delete(id):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
