@@ -13,7 +13,7 @@ def get_all():
 
 # POST bots
 @admin_only
-def create(body):
+def create(body, **kwargs):
     id = body.get('id')
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
@@ -49,7 +49,7 @@ def get_one(id):
 
 # PUT bots/<id>
 @admin_only
-def update(id, body):
+def update(id, body, **kwargs):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
     if existing_bot is not None:
@@ -70,7 +70,7 @@ def update(id, body):
 
 # DELETE bots/<id>
 @admin_only
-def delete(id):
+def delete(id, **kwargs):
     existing_bot = Bot.query.filter_by(id=id).one_or_none()
 
     if existing_bot is not None:
