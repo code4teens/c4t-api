@@ -29,11 +29,7 @@ class User(Base):
     cohort_id = Column(SmallInteger, nullable=True)
     is_admin = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
-    last_updated = Column(
-        DateTime,
-        nullable=False,
-        default=func.now()
-    )
+    last_updated = Column(DateTime, nullable=False, default=func.now())
 
     bots = relationship('Bot', back_populates='user', order_by='Bot.id')
 
