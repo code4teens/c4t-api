@@ -1,3 +1,5 @@
+from functools import wraps
+
 from flask import jsonify, make_response
 import pytz
 
@@ -14,8 +16,9 @@ def make_json_response(title, status, detail):
     return make_response(jsonify(response_object)), status
 
 
-def admin_only(f):
-    def wrap(**kwargs):
+def admin_only(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
         token_info = kwargs.get('token_info')
         is_admin = token_info.get('is_admin')
 
@@ -25,13 +28,14 @@ def admin_only(f):
 
             return make_json_response(title, 403, detail)
 
-        return f(**kwargs)
+        return func(*args, **kwargs)
 
-    return wrap
+    return decorated_view
 
 
-def admin_or_owner_only(f):
-    def wrap(**kwargs):
+def admin_or_owner_only(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
         id = kwargs.get('id')
         token_info = kwargs.get('token_info')
         sub = token_info.get('sub')
@@ -43,6 +47,6 @@ def admin_or_owner_only(f):
 
             return make_json_response(title, 403, detail)
 
-        return f(**kwargs)
+        return func(**kwargs)
 
-    return wrap
+    return decorated_view
