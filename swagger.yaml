@@ -410,6 +410,146 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404BotNotFound'
+  /cohorts:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Returns all cohorts
+      operationId: cohort.get_all
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Creates cohort
+      operationId: cohort.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialCohort'
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Conflict
+                status: 409
+                detail: Cohort 42 already exists
+  /cohorts/{id}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Returns cohort
+      operationId: cohort.get_one
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
+    put:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Updates cohort
+      operationId: cohort.update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialCohort'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
+    delete:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Deletes cohort
+      operationId: cohort.delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: OK
+                status: 200
+                detail: Cohort 42 deleted
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
 components:
   schemas:
     PartialUser:
@@ -499,6 +639,33 @@ components:
             last_updated:
               type: string
               example: '2021-04-20T08:42:00'
+    PartialCohort:
+      type: object
+      properties:
+        name:
+          type: string
+          example: discord.py Botcamp
+        nickname:
+          type: string
+          example: dpy
+        duration:
+          type: integer
+          example: 42
+        start_date:
+          type: string
+          example: '2021-04-20T08:42:00'
+    Cohort:
+      allOf:
+        - $ref: '#/components/schemas/PartialCohort'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 42
+            review_schema:
+              type: object
+            feedback_schema:
+              type: object
     Response:
       properties:
         title:
@@ -548,6 +715,16 @@ components:
             title: Not Found
             status: 404
             detail: Bot 654321654321654321 not found
+    404CohortNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Not Found
+            status: 404
+            detail: Cohort 42 not found
   securitySchemes:
     bearerAuth:
       type: http

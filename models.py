@@ -6,10 +6,13 @@ from sqlalchemy import (
     BigInteger,
     Boolean,
     Column,
+    Date,
     DateTime,
     ForeignKey,
     func,
     Integer,
+    JSON,
+    SmallInteger,
     String
 )
 from sqlalchemy.orm import relationship
@@ -73,6 +76,17 @@ class Bot(Base):
     user = relationship('User', back_populates='bots')
 
 
+class Cohort(Base):
+    __tablename__ = 'cohort'
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    name = Column(String(32), nullable=False)
+    nickname = Column(String(16), nullable=False)
+    duration = Column(SmallInteger, nullable=False)
+    start_date = Column(Date, nullable=False)
+    review_schema = Column(JSON, nullable=True)
+    feedback_schema = Column(JSON, nullable=True)
+
+
 class UserSchema(Schema):
     id = fields.Integer()
     password = fields.String()
@@ -108,3 +122,13 @@ class BotSchema(Schema):
 
 class NestedBotSchema(Schema):
     id = fields.Integer()
+
+
+class CohortSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    nickname = fields.String()
+    duration = fields.Integer()
+    start_date = fields.Date()
+    review_schema = fields.Dict()
+    feedback_schema = fields.Dict()
