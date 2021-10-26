@@ -9,7 +9,7 @@ from utils import make_json_response
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 connexion_app = connexion.App(__name__, specification_dir=basedir)
-connexion_app.add_api('swagger.yml')
+connexion_app.add_api('swagger.yaml')
 
 
 @connexion_app.route('/')
