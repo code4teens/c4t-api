@@ -128,9 +128,7 @@ def login(id, body):
             body.get('password').encode('utf-8'),
             existing_user.password.encode('utf-8')
         ):
-            auth_token = existing_user.encode_auth_token(
-                id, existing_user.is_admin
-            )
+            auth_token = existing_user.encode_auth_token()
             if auth_token:
                 title = 'OK'
                 detail = f'{auth_token}'

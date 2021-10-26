@@ -257,7 +257,7 @@ paths:
               example:
                 title: OK
                 status: 200
-                detail: Logged in as user 123456123456123456 with token xxxxx.yyyyy.zzzzz
+                detail: xxxxx.yyyyy.zzzzz
         401:
           description: Unauthorised
           content:
@@ -424,9 +424,9 @@ components:
         display_name:
           type: string
           example: John Doe
-        cohort_id:
+        xp:
           type: integer
-          example: 1
+          example: 42
     NaiveUser:
       allOf:
         - $ref: '#/components/schemas/PartialUser'

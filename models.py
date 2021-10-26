@@ -9,7 +9,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     func,
-    SmallInteger,
+    Integer,
     String
 )
 from sqlalchemy.orm import relationship
@@ -26,20 +26,22 @@ class User(Base):
     name = Column(String(64), nullable=False)
     discriminator = Column(String(4), nullable=False)
     display_name = Column(String(64), nullable=False)
-    cohort_id = Column(SmallInteger, nullable=True)
+    xp = Column(Integer, nullable=False)
     is_admin = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
     last_updated = Column(DateTime, nullable=False, default=func.now())
 
-    bots = relationship('Bot', back_populates='user', order_by='Bot.id')
+    bots = relationship(
+        'Bot', back_populates='user', order_by='Bot.created_at'
+    )
 
-    def encode_auth_token(self, id, is_admin):
+    def encode_auth_token(self):
         try:
             payload = {
                 'exp': datetime.now(tz) + timedelta(seconds=1200),
                 'iat': datetime.now(tz),
-                'sub': id,
-                'is_admin': is_admin
+                'sub': self.id,
+                'is_admin': self.is_admin
             }
 
             return jwt.encode(
@@ -66,11 +68,7 @@ class Bot(Base):
     user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
     msg_id = Column(BigInteger, nullable=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
-    last_updated = Column(
-        DateTime,
-        nullable=False,
-        default=func.now()
-    )
+    last_updated = Column(DateTime, nullable=False, default=func.now())
 
     user = relationship('User', back_populates='bots')
 
@@ -81,7 +79,7 @@ class UserSchema(Schema):
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
-    cohort_id = fields.Integer()
+    xp = fields.Integer()
     is_admin = fields.Boolean()
     created_at = fields.DateTime()
     last_updated = fields.DateTime()
