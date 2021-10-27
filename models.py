@@ -37,6 +37,9 @@ class User(Base):
     bots = relationship(
         'Bot', back_populates='user', order_by='Bot.created_at'
     )
+    enrolments = relationship(
+        'Enrolment', back_populates='user', order_by='Enrolment.id'
+    )
 
     def encode_auth_token(self):
         try:
@@ -86,6 +89,20 @@ class Cohort(Base):
     review_schema = Column(JSON, nullable=True)
     feedback_schema = Column(JSON, nullable=True)
 
+    enrolments = relationship(
+        'Enrolment', back_populates='cohort', order_by='Enrolment.id'
+    )
+
+
+class Enrolment(Base):
+    __tablename__ = 'enrolment'
+    id = Column(SmallInteger, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    cohort_id = Column(SmallInteger, ForeignKey('cohort.id'), nullable=False)
+
+    user = relationship('User', back_populates='enrolments')
+    cohort = relationship('Cohort', back_populates='enrolments')
+
 
 class UserSchema(Schema):
     id = fields.Integer()
@@ -99,10 +116,20 @@ class UserSchema(Schema):
     last_updated = fields.DateTime()
 
     bots = fields.Nested('NestedBotSchema', default=[], many=True)
+    enrolments = fields.Nested(
+        'NestedUserEnrolmentSchema', default=[], many=True
+    )
 
     @post_load
     def make_user(self, data, **kwargs):
         return User(**data)
+
+
+class NestedUserSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    discriminator = fields.String()
+    display_name = fields.String()
 
 
 class BotSchema(Schema):
@@ -110,10 +137,11 @@ class BotSchema(Schema):
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
-    user_id = fields.Integer()
     msg_id = fields.Integer()
     created_at = fields.DateTime()
     last_updated = fields.DateTime()
+
+    user = fields.Nested('NestedUserSchema')
 
     @post_load
     def make_bot(self, data, **kwargs):
@@ -122,6 +150,9 @@ class BotSchema(Schema):
 
 class NestedBotSchema(Schema):
     id = fields.Integer()
+    name = fields.String()
+    discriminator = fields.String()
+    display_name = fields.String()
 
 
 class CohortSchema(Schema):
@@ -133,6 +164,35 @@ class CohortSchema(Schema):
     review_schema = fields.Dict(allow_none=True)
     feedback_schema = fields.Dict(allow_none=True)
 
+    enrolments = fields.Nested(
+        'NestedCohortEnrolmentSchema', default=[], many=True
+    )
+
     @post_load
     def make_cohort(self, data, **kwargs):
         return Cohort(**data)
+
+
+class NestedCohortSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    nickname = fields.String()
+
+
+class EnrolmentSchema(Schema):
+    id = fields.Integer()
+
+    users = fields.Nested('NestedUserSchema', default=[], many=True)
+    cohort = fields.Nested('NestedCohortSchema')
+
+
+class NestedUserEnrolmentSchema(Schema):
+    id = fields.Integer()
+
+    cohort = fields.Nested('NestedCohortSchema')
+
+
+class NestedCohortEnrolmentSchema(Schema):
+    id = fields.Integer()
+
+    user = fields.Nested('NestedUserSchema')

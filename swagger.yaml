@@ -427,7 +427,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Cohort 42 already exists
+                detail: Cohort 1 already exists
   /cohorts/{id}:
     get:
       security:
@@ -508,13 +508,153 @@ paths:
               example:
                 title: OK
                 status: 200
-                detail: Cohort 42 deleted
+                detail: Cohort 1 deleted
         401:
           $ref: '#/components/responses/401Unauthorised'
         403:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404CohortNotFound'
+  /enrolments:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Enrolment
+      summary: Returns all enrolments
+      operationId: enrolment.get_all
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enrolment'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Enrolment
+      summary: Creates enrolment
+      operationId: enrolment.create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enrolment'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrolment'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Conflict
+                status: 409
+                detail: Enrolment 1 already exists
+  /enrolments/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Enrolment
+      summary: Returns enrolment
+      operationId: enrolment.get_one
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrolment'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        404:
+          $ref: '#/components/responses/404EnrolmentNotFound'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Enrolment
+      summary: Updates enrolment
+      operationId: enrolment.update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialEnrolment'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrolment'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404EnrolmentNotFound'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Enrolment
+      summary: Deletes enrolment
+      operationId: enrolment.delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: OK
+                status: 200
+                detail: Enrolment 1 deleted
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404EnrolmentNotFound'
 components:
   schemas:
     PartialUser:
@@ -527,13 +667,13 @@ components:
           type: string
           minLength: 4
           maxLength: 4
-          example: '4242'
+          example: '1111'
         display_name:
           type: string
           example: John Doe
         xp:
           type: integer
-          example: 42
+          example: 0
         is_admin:
           type: boolean
           example: false
@@ -546,7 +686,7 @@ components:
               type: integer
               minimum: 111111111111111111
               maximum: 999999999999999999
-              example: 123456123456123456
+              example: 111111111111111111
             created_at:
               type: string
               readOnly: true
@@ -563,7 +703,37 @@ components:
                 properties:
                   id:
                     type: integer
-                    example: 654321654321654321
+                    example: 222222222222222222
+                  name:
+                    type: string
+                    example: clockwork
+                  discriminator:
+                    type: string
+                    example: '2222'
+                  display_name:
+                    type: string
+                    example: Clockwork the Bot
+            enrolments:
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  cohort:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: discord.py Botcamp
+                      nickname:
+                        type: string
+                        example: dpy
         - required:
           - id
           - name
@@ -580,20 +750,21 @@ components:
           type: string
           minLength: 4
           maxLength: 4
-          example: '2121'
+          example: '2222'
         display_name:
           type: string
           example: Clockwork the Bot
         user_id:
           type: integer
+          writeOnly: true
           minimum: 111111111111111111
           maximum: 999999999999999999
-          example: 123456123456123456
+          example: 111111111111111111
         msg_id:
           type: integer
           minimum: 111111111111111111
           maximum: 999999999999999999
-          example: 456123456123456123
+          example: 333333333333333333
     Bot:
       allOf:
         - $ref: '#/components/schemas/PartialBot'
@@ -603,7 +774,7 @@ components:
               type: integer
               minimum: 111111111111111111
               maximum: 999999999999999999
-              example: 654321654321654321
+              example: 222222222222222222
             created_at:
               type: string
               readOnly: true
@@ -612,6 +783,22 @@ components:
               type: string
               readOnly: true
               example: '2021-04-20T08:42:00'
+            user:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 111111111111111111
+                name:
+                  type: string
+                  example: johndoe
+                discriminator:
+                  type: string
+                  example: '1111'
+                display_name:
+                  type: string
+                  example: John Doe
         - required:
           - id
           - name
@@ -648,12 +835,90 @@ components:
             id:
               type: integer
               readOnly: true
-              example: 42
+              example: 1
+            enrolments:
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 111111111111111111
+                      name:
+                        type: string
+                        example: johndoe
+                      discriminator:
+                        type: string
+                        example: '1111'
+                      display_name:
+                        type: string
+                        example: John Doe
         - required:
           - name
           - nickname
           - duration
           - start_date
+    PartialEnrolment:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          writeOnly: true
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          example: 111111111111111111
+        cohort_id:
+          type: integer
+          writeOnly: true
+          example: 1
+    Enrolment:
+      allOf:
+        - $ref: '#/components/schemas/PartialEnrolment'
+        - type: object
+        - properties:
+            id:
+              type: integer
+              readOnly: true
+              example: 1
+            user:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 111111111111111111
+                name:
+                  type: string
+                  example: johndoe
+                discriminator:
+                  type: string
+                  example: '1111'
+                display_name:
+                  type: string
+                  example: John Doe
+            cohort:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: discord.py Botcamp
+                nickname:
+                  type: string
+                  example: dpy
+        - required:
+          - user_id
+          - cohort_id
     Response:
       properties:
         title:
@@ -692,7 +957,7 @@ components:
           example:
             title: Not Found
             status: 404
-            detail: User 123456123456123456 not found
+            detail: User 111111111111111111 not found
     404BotNotFound:
       description: Not Found
       content:
@@ -702,7 +967,7 @@ components:
           example:
             title: Not Found
             status: 404
-            detail: Bot 654321654321654321 not found
+            detail: Bot 222222222222222222 not found
     404CohortNotFound:
       description: Not Found
       content:
@@ -712,7 +977,17 @@ components:
           example:
             title: Not Found
             status: 404
-            detail: Cohort 42 not found
+            detail: Cohort 1 not found
+    404EnrolmentNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Not Found
+            status: 404
+            detail: Enrolment 1 not found
   securitySchemes:
     bearerAuth:
       type: http
