@@ -89,12 +89,6 @@ def delete(id, **kwargs):
         return make_json_response(title, 404, detail)
 
 
-# PUT users/<id>/is_admin
-@admin_only
-def update_is_admin(**kwargs):
-    update(**kwargs)
-
-
 # PUT users/<id>/password
 @admin_or_owner_only
 def update_password(id, body, **kwargs):

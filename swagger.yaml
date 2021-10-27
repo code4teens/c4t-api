@@ -147,43 +147,6 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404UserNotFound'
-  /users/{id}/is_admin:
-    put:
-      security:
-        - bearerAuth: []
-      tags:
-        - User
-      summary: Updates user authority
-      operationId: user.update_is_admin
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                is_admin:
-                  type: boolean
-                  example: false
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        401:
-          $ref: '#/components/responses/401Unauthorised'
-        403:
-          $ref: '#/components/responses/403Forbidden'
-        404:
-          $ref: '#/components/responses/404UserNotFound'
   /users/{id}/password:
     put:
       security:
@@ -546,80 +509,6 @@ paths:
                 title: OK
                 status: 200
                 detail: Cohort 42 deleted
-        401:
-          $ref: '#/components/responses/401Unauthorised'
-        403:
-          $ref: '#/components/responses/403Forbidden'
-        404:
-          $ref: '#/components/responses/404CohortNotFound'
-  /cohorts/{id}/review_schema:
-    put:
-      security:
-        - bearerAuth: []
-      tags:
-        - Cohort
-      summary: Updates cohort review schema
-      operationId: cohort.update_review_schema
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                review_schema:
-                  type: object
-                  nullable: true
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cohort'
-        401:
-          $ref: '#/components/responses/401Unauthorised'
-        403:
-          $ref: '#/components/responses/403Forbidden'
-        404:
-          $ref: '#/components/responses/404CohortNotFound'
-  /cohorts/{id}/feedback_schema:
-    put:
-      security:
-        - bearerAuth: []
-      tags:
-        - Cohort
-      summary: Updates cohort feedback schema
-      operationId: cohort.update_feedback_schema
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                feedback_schema:
-                  type: object
-                  nullable: true
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cohort'
         401:
           $ref: '#/components/responses/401Unauthorised'
         403:

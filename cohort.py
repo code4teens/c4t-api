@@ -85,15 +85,3 @@ def delete(id, **kwargs):
         detail = f'Cohort {id} not found'
 
         return make_json_response(title, 404, detail)
-
-
-# PUT cohorts/<id>/review_schema
-@admin_only
-def update_review_schema(**kwargs):
-    update(**kwargs)
-
-
-# PUT cohorts/<id>/feedback_schema
-@admin_only
-def update_feedback_schema(**kwargs):
-    update(**kwargs)
