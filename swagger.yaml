@@ -550,6 +550,78 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404CohortNotFound'
+  /cohorts/{id}/review_schema:
+    put:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Updates cohort review schema
+      operationId: cohort.update_review_schema
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review_schema:
+                  type: object
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
+  /cohorts/{id}/feedback_schema:
+    put:
+      security:
+      - bearerAuth: []
+      tags:
+      - Cohort
+      summary: Updates cohort feedback schema
+      operationId: cohort.update_feedback_schema
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                feedback_schema:
+                  type: object
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
 components:
   schemas:
     PartialUser:
@@ -653,7 +725,7 @@ components:
           example: 42
         start_date:
           type: string
-          example: '2021-04-20T08:42:00'
+          example: '2021-04-20'
     Cohort:
       allOf:
         - $ref: '#/components/schemas/PartialCohort'
