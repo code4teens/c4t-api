@@ -572,6 +572,7 @@ paths:
               properties:
                 review_schema:
                   type: object
+                  nullable: true
         required: true
       responses:
         200:
@@ -608,6 +609,7 @@ paths:
               properties:
                 feedback_schema:
                   type: object
+                  nullable: true
         required: true
       responses:
         200:

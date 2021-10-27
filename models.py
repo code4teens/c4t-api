@@ -130,8 +130,8 @@ class CohortSchema(Schema):
     nickname = fields.String()
     duration = fields.Integer()
     start_date = fields.Date()
-    review_schema = fields.Dict()
-    feedback_schema = fields.Dict()
+    review_schema = fields.Dict(allow_none=True)
+    feedback_schema = fields.Dict(allow_none=True)
 
     @post_load
     def make_cohort(self, data, **kwargs):
