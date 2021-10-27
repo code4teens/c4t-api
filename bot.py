@@ -5,8 +5,8 @@ from utils import admin_only, make_json_response
 
 # GET bots
 def get_all():
-    bot = Bot.query.order_by(Bot.id).all()
-    data = BotSchema(many=True).dump(bot)
+    bots = Bot.query.order_by(Bot.id).all()
+    data = BotSchema(many=True).dump(bots)
 
     return data
 
@@ -19,10 +19,10 @@ def create(body, **kwargs):
 
     if existing_bot is None:
         bot_schema = BotSchema()
-        user = bot_schema.load(body)
-        db_session.add(user)
+        bot = bot_schema.load(body)
+        db_session.add(bot)
         db_session.commit()
-        data = bot_schema.dump(user)
+        data = bot_schema.dump(bot)
 
         return data, 201
     else:
