@@ -2,15 +2,17 @@ openapi: 3.0.3
 info:
   title: Code4Teens REST API
   version: 1.0.0
+
 servers:
-- url: /api/v1
+  - url: /api/v1
+
 paths:
   /users:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Returns all users
       operationId: user.get_all
       responses:
@@ -21,22 +23,22 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserBots'
+                  $ref: '#/components/schemas/User'
         401:
           $ref: '#/components/responses/401Unauthorised'
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Creates user
       operationId: user.create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NaiveUser'
-        required: true
+              $ref: '#/components/schemas/User'
       responses:
         201:
           description: Created
@@ -61,47 +63,47 @@ paths:
   /users/{id}:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Returns user
       operationId: user.get_one
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserBots'
+                $ref: '#/components/schemas/User'
         401:
           $ref: '#/components/responses/401Unauthorised'
         404:
           $ref: '#/components/responses/404UserNotFound'
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Updates user
       operationId: user.update
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PartialUser'
-        required: true
       responses:
         200:
           description: OK
@@ -117,17 +119,17 @@ paths:
           $ref: '#/components/responses/404UserNotFound'
     delete:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Deletes user
       operationId: user.delete
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -148,18 +150,19 @@ paths:
   /users/{id}/is_admin:
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Updates user authority
       operationId: user.update_is_admin
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -167,9 +170,7 @@ paths:
               properties:
                 is_admin:
                   type: boolean
-            example:
-              is_admin: false
-        required: true
+                  example: false
       responses:
         200:
           description: OK
@@ -186,18 +187,19 @@ paths:
   /users/{id}/password:
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - User
+        - User
       summary: Updates user password
       operationId: user.update_password
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -205,9 +207,8 @@ paths:
               properties:
                 password:
                   type: string
-            example:
-              password: new_password
-        required: true
+                  format: password
+                  example: new_password
       responses:
         200:
           description: OK
@@ -228,16 +229,17 @@ paths:
   /users/{id}/login:
     post:
       tags:
-      - User
+        - User
       summary: Logs user in
       operationId: user.login
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -245,8 +247,8 @@ paths:
               properties:
                 password:
                   type: string
+                  format: password
                   example: password
-        required: true
       responses:
         200:
           description: OK
@@ -273,9 +275,9 @@ paths:
   /bots:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Bot
+        - Bot
       summary: Returns all bots
       operationId: bot.get_all
       responses:
@@ -291,17 +293,17 @@ paths:
           $ref: '#/components/responses/401Unauthorised'
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Bot
+        - Bot
       summary: Creates bot
       operationId: bot.create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NaiveBot'
-        required: true
+              $ref: '#/components/schemas/Bot'
       responses:
         201:
           description: Created
@@ -326,17 +328,17 @@ paths:
   /bots/{id}:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Bot
+        - Bot
       summary: Returns bot
       operationId: bot.get_one
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -350,23 +352,23 @@ paths:
           $ref: '#/components/responses/404BotNotFound'
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Bot
+        - Bot
       summary: Updates bot
       operationId: bot.update
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PartialBot'
-        required: true
       responses:
         200:
           description: OK
@@ -382,17 +384,17 @@ paths:
           $ref: '#/components/responses/404BotNotFound'
     delete:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Bot
+        - Bot
       summary: Deletes bot
       operationId: bot.delete
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -413,9 +415,9 @@ paths:
   /cohorts:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Returns all cohorts
       operationId: cohort.get_all
       responses:
@@ -431,17 +433,17 @@ paths:
           $ref: '#/components/responses/401Unauthorised'
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Creates cohort
       operationId: cohort.create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartialCohort'
-        required: true
+              $ref: '#/components/schemas/Cohort'
       responses:
         201:
           description: Created
@@ -466,17 +468,17 @@ paths:
   /cohorts/{id}:
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Returns cohort
       operationId: cohort.get_one
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -490,23 +492,23 @@ paths:
           $ref: '#/components/responses/404CohortNotFound'
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Updates cohort
       operationId: cohort.update
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PartialCohort'
-        required: true
       responses:
         200:
           description: OK
@@ -522,17 +524,17 @@ paths:
           $ref: '#/components/responses/404CohortNotFound'
     delete:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Deletes cohort
       operationId: cohort.delete
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -553,18 +555,19 @@ paths:
   /cohorts/{id}/review_schema:
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Updates cohort review schema
       operationId: cohort.update_review_schema
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -573,7 +576,6 @@ paths:
                 review_schema:
                   type: object
                   nullable: true
-        required: true
       responses:
         200:
           description: OK
@@ -590,18 +592,19 @@ paths:
   /cohorts/{id}/feedback_schema:
     put:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags:
-      - Cohort
+        - Cohort
       summary: Updates cohort feedback schema
       operationId: cohort.update_feedback_schema
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -610,7 +613,6 @@ paths:
                 feedback_schema:
                   type: object
                   nullable: true
-        required: true
       responses:
         200:
           description: OK
@@ -634,6 +636,8 @@ components:
           example: johndoe
         discriminator:
           type: string
+          minLength: 4
+          maxLength: 4
           example: '4242'
         display_name:
           type: string
@@ -641,41 +645,42 @@ components:
         xp:
           type: integer
           example: 42
-    NaiveUser:
+        is_admin:
+          type: boolean
+          example: false
+    User:
       allOf:
         - $ref: '#/components/schemas/PartialUser'
         - type: object
-          properties:
+        - properties:
             id:
               type: integer
+              minimum: 111111111111111111
+              maximum: 999999999999999999
               example: 123456123456123456
-            is_admin:
-              type: boolean
-              example: false
-    User:
-      allOf:
-        - $ref: '#/components/schemas/NaiveUser'
-        - type: object
-          properties:
             created_at:
               type: string
+              readOnly: true
               example: '2021-04-20T08:42:00'
             last_updated:
               type: string
+              readOnly: true
               example: '2021-04-20T08:42:00'
-    UserBots:
-      allOf:
-        - $ref: '#/components/schemas/User'
-        - type: object
-          properties:
             bots:
               type: array
+              readOnly: true
               items:
                 type: object
                 properties:
                   id:
                     type: integer
                     example: 654321654321654321
+        - required:
+          - id
+          - name
+          - discriminator
+          - display_name
+          - xp
     PartialBot:
       type: object
       properties:
@@ -684,35 +689,47 @@ components:
           example: clockwork
         discriminator:
           type: string
+          minLength: 4
+          maxLength: 4
           example: '2121'
         display_name:
           type: string
           example: Clockwork the Bot
         user_id:
           type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
           example: 123456123456123456
         msg_id:
           type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
           example: 456123456123456123
-    NaiveBot:
+    Bot:
       allOf:
         - $ref: '#/components/schemas/PartialBot'
         - type: object
-          properties:
+        - properties:
             id:
               type: integer
+              minimum: 111111111111111111
+              maximum: 999999999999999999
               example: 654321654321654321
-    Bot:
-      allOf:
-        - $ref: '#/components/schemas/NaiveBot'
-        - type: object
-          properties:
             created_at:
               type: string
+              readOnly: true
               example: '2021-04-20T08:42:00'
             last_updated:
               type: string
+              readOnly: true
               example: '2021-04-20T08:42:00'
+        - required:
+          - id
+          - name
+          - discriminator
+          - display_name
+          - user_id
+          - msg_id
     PartialCohort:
       type: object
       properties:
@@ -728,18 +745,26 @@ components:
         start_date:
           type: string
           example: '2021-04-20'
+        review_schema:
+          type: object
+          nullable: true
+        feedback_schema:
+          type: object
+          nullable: true
     Cohort:
       allOf:
         - $ref: '#/components/schemas/PartialCohort'
         - type: object
-          properties:
+        - properties:
             id:
               type: integer
+              readOnly: true
               example: 42
-            review_schema:
-              type: object
-            feedback_schema:
-              type: object
+        - required:
+          - name
+          - nickname
+          - duration
+          - start_date
     Response:
       properties:
         title:
