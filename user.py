@@ -21,10 +21,10 @@ def create(body, **kwargs):
 
     if existing_user is None:
         user_schema = UserSchema(exclude=['password', 'bots'])
-        new_user = user_schema.load(body)
-        db_session.add(new_user)
+        user = user_schema.load(body)
+        db_session.add(user)
         db_session.commit()
-        data = user_schema.dump(new_user)
+        data = user_schema.dump(user)
 
         return data, 201
     else:
@@ -56,9 +56,9 @@ def update(id, body, **kwargs):
 
     if existing_user is not None:
         user_schema = UserSchema(exclude=['password', 'bots'])
-        updated_user = user_schema.load(body)
-        updated_user.id = existing_user.id
-        db_session.merge(updated_user)
+        user = user_schema.load(body)
+        user.id = existing_user.id
+        db_session.merge(user)
         db_session.commit()
         data = user_schema.dump(existing_user)
 
@@ -101,12 +101,12 @@ def update_password(id, body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        updated_user = UserSchema().load(body)
-        updated_user.id = existing_user.id
-        updated_user.password = bcrypt.hashpw(
+        user = UserSchema().load(body)
+        user.id = existing_user.id
+        user.password = bcrypt.hashpw(
             body.get('password').encode('utf-8'), bcrypt.gensalt()
         )
-        db_session.merge(updated_user)
+        db_session.merge(user)
         db_session.commit()
         title = 'OK'
         detail = f'Updated password for user {id}'
