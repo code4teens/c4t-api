@@ -78,7 +78,7 @@ class Bot(Base):
 
 class Cohort(Base):
     __tablename__ = 'cohort'
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(SmallInteger, primary_key=True, autoincrement=True)
     name = Column(String(32), nullable=False)
     nickname = Column(String(16), nullable=False)
     duration = Column(SmallInteger, nullable=False)
@@ -132,3 +132,7 @@ class CohortSchema(Schema):
     start_date = fields.Date()
     review_schema = fields.Dict()
     feedback_schema = fields.Dict()
+
+    @post_load
+    def make_cohort(self, data, **kwargs):
+        return Cohort(**data)
