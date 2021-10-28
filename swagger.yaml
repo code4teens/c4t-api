@@ -655,6 +655,146 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404EnrolmentNotFound'
+  /evals:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Eval
+      summary: Returns all evals
+      operationId: eval.get_all
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Eval'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Eval
+      summary: Creates eval
+      operationId: eval.create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Eval'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Eval'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: Conflict
+                status: 409
+                detail: Eval 1 already exists
+  /evals/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Eval
+      summary: Returns eval
+      operationId: eval.get_one
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Eval'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        404:
+          $ref: '#/components/responses/404EvalNotFound'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Eval
+      summary: Updates eval
+      operationId: eval.update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialEval'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Eval'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404EvalNotFound'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Eval
+      summary: Deletes eval
+      operationId: eval.delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: OK
+                status: 200
+                detail: Eval 1 deleted
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404EvalNotFound'
 components:
   schemas:
     PartialUser:
@@ -722,6 +862,84 @@ components:
                   id:
                     type: integer
                     example: 1
+                  cohort:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: discord.py Botcamp
+                      nickname:
+                        type: string
+                        example: dpy
+            evals_as_evaluator:
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  date:
+                    type: string
+                    example: '2021-04-20'
+                  evaluatee:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 888888888888888888
+                      name:
+                        type: string
+                        example: janedoe
+                      discriminator:
+                        type: string
+                        example: '8888'
+                      display_name:
+                        type: string
+                        example: Jane Doe
+                  cohort:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: discord.py Botcamp
+                      nickname:
+                        type: string
+                        example: dpy
+            evals_as_evaluatee:
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  date:
+                    type: string
+                    example: '2021-04-20'
+                  evaluator:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 888888888888888888
+                      name:
+                        type: string
+                        example: janedoe
+                      discriminator:
+                        type: string
+                        example: '8888'
+                      display_name:
+                        type: string
+                        example: Jane Doe
                   cohort:
                     type: object
                     properties:
@@ -860,6 +1078,48 @@ components:
                       display_name:
                         type: string
                         example: John Doe
+            evals:
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  date:
+                    type: string
+                    example: '2021-04-20'
+                  evaluator:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 111111111111111111
+                      name:
+                        type: string
+                        example: johndoe
+                      discriminator:
+                        type: string
+                        example: '1111'
+                      display_name:
+                        type: string
+                        example: John Doe
+                  evaluatee:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 888888888888888888
+                      name:
+                        type: string
+                        example: janedoe
+                      discriminator:
+                        type: string
+                        example: '8888'
+                      display_name:
+                        type: string
+                        example: Jane Doe
         - required:
           - name
           - nickname
@@ -919,6 +1179,93 @@ components:
         - required:
           - user_id
           - cohort_id
+    PartialEval:
+      type: object
+      properties:
+        evaluator_id:
+          type: integer
+          writeOnly: true
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          example: 111111111111111111
+        evaluatee_id:
+          type: integer
+          writeOnly: true
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          example: 888888888888888888
+        cohort_id:
+          type: integer
+          writeOnly: true
+          example: 1
+        date:
+          type: string
+          example: '2021-04-20'
+        review:
+          type: object
+          nullable: true
+        feedback:
+          type: object
+          nullable: true
+    Eval:
+      allOf:
+        - $ref: '#/components/schemas/PartialEval'
+        - type: object
+        - properties:
+            id:
+              type: integer
+              readOnly: true
+              example: 1
+            evaluator:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 111111111111111111
+                name:
+                  type: string
+                  example: johndoe
+                discriminator:
+                  type: string
+                  example: '1111'
+                display_name:
+                  type: string
+                  example: John Doe
+            evaluatee:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 888888888888888888
+                name:
+                  type: string
+                  example: janedoe
+                discriminator:
+                  type: string
+                  example: '8888'
+                display_name:
+                  type: string
+                  example: Jane Doe
+            cohort:
+              type: object
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: discord.py Botcamp
+                nickname:
+                  type: string
+                  example: dpy
+        - required:
+          - evaluator_id
+          - evaluatee_id
+          - cohort_id
+          - date
     Response:
       properties:
         title:
@@ -988,6 +1335,16 @@ components:
             title: Not Found
             status: 404
             detail: Enrolment 1 not found
+    404EvalNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            title: Not Found
+            status: 404
+            detail: Eval 1 not found
   securitySchemes:
     bearerAuth:
       type: http

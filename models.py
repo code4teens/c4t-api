@@ -40,6 +40,18 @@ class User(Base):
     enrolments = relationship(
         'Enrolment', back_populates='user', order_by='Enrolment.id'
     )
+    evals_as_evaluator = relationship(
+        'Eval',
+        foreign_keys='Eval.evaluator_id',
+        back_populates='evaluator',
+        order_by='Eval.id'
+    )
+    evals_as_evaluatee = relationship(
+        'Eval',
+        foreign_keys='Eval.evaluatee_id',
+        back_populates='evaluatee',
+        order_by='Eval.id'
+    )
 
     def encode_auth_token(self):
         try:
@@ -92,6 +104,7 @@ class Cohort(Base):
     enrolments = relationship(
         'Enrolment', back_populates='cohort', order_by='Enrolment.id'
     )
+    evals = relationship('Eval', back_populates='cohort', order_by='Eval.id')
 
 
 class Enrolment(Base):
@@ -102,6 +115,29 @@ class Enrolment(Base):
 
     user = relationship('User', back_populates='enrolments')
     cohort = relationship('Cohort', back_populates='enrolments')
+
+
+class Eval(Base):
+    __tablename__ = 'eval'
+    id = Column(SmallInteger, primary_key=True, autoincrement=True)
+    evaluator_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    evaluatee_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    cohort_id = Column(SmallInteger, ForeignKey('cohort.id'), nullable=False)
+    date = Column(Date, nullable=False)
+    review = Column(JSON, nullable=True)
+    feedback = Column(JSON, nullable=True)
+
+    evaluator = relationship(
+        'User',
+        foreign_keys=[evaluator_id],
+        back_populates='evals_as_evaluator'
+    )
+    evaluatee = relationship(
+        'User',
+        foreign_keys=[evaluatee_id],
+        back_populates='evals_as_evaluatee'
+    )
+    cohort = relationship('Cohort', back_populates='evals')
 
 
 class UserSchema(Schema):
@@ -118,6 +154,12 @@ class UserSchema(Schema):
     bots = fields.Nested('NestedBotSchema', default=[], many=True)
     enrolments = fields.Nested(
         'NestedUserEnrolmentSchema', default=[], many=True
+    )
+    evals_as_evaluator = fields.Nested(
+        'NestedUserEvalEvaluatorSchema', default=[], many=True
+    )
+    evals_as_evaluatee = fields.Nested(
+        'NestedUserEvalEvaluateeSchema', default=[], many=True
     )
 
     @post_load
@@ -167,6 +209,7 @@ class CohortSchema(Schema):
     enrolments = fields.Nested(
         'NestedCohortEnrolmentSchema', default=[], many=True
     )
+    evals = fields.Nested('NestedCohortEvalSchema', default=[], many=True)
 
     @post_load
     def make_cohort(self, data, **kwargs):
@@ -196,3 +239,38 @@ class NestedCohortEnrolmentSchema(Schema):
     id = fields.Integer()
 
     user = fields.Nested('NestedUserSchema')
+
+
+class EvalSchema(Schema):
+    id = fields.Integer()
+    date = fields.Date()
+    review = fields.Dict(allow_none=True)
+    feedback = fields.Dict(allow_none=True)
+
+    evaluator = fields.Nested('NestedUserSchema')
+    evaluatee = fields.Nested('NestedUserSchema')
+    cohort = fields.Nested('NestedCohortSchema')
+
+
+class NestedUserEvalEvaluatorSchema(Schema):
+    id = fields.Integer()
+    date = fields.Date()
+
+    evaluatee = fields.Nested('NestedUserSchema')
+    cohort = fields.Nested('NestedCohortSchema')
+
+
+class NestedUserEvalEvaluateeSchema(Schema):
+    id = fields.Integer()
+    date = fields.Date()
+
+    evaluator = fields.Nested('NestedUserSchema')
+    cohort = fields.Nested('NestedCohortSchema')
+
+
+class NestedCohortEvalSchema(Schema):
+    id = fields.Integer()
+    date = fields.Date()
+
+    evaluator = fields.Nested('NestedUserSchema')
+    evaluatee = fields.Nested('NestedUserSchema')
