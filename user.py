@@ -142,7 +142,7 @@ def login(id, body):
 
 # GET users/<id>/api_key
 @admin_or_owner_only
-def get_api_key(id):
+def get_api_key(id, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
@@ -158,7 +158,7 @@ def get_api_key(id):
 
 # PUT users/<id>/api_key
 @admin_or_owner_only
-def update_api_key(id):
+def update_api_key(id, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
