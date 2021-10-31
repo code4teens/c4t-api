@@ -1,3 +1,5 @@
+import secrets
+
 import bcrypt
 
 from database import db_session
@@ -8,7 +10,7 @@ from utils import admin_only, admin_or_owner_only, make_json_response
 # GET users
 def get_all():
     users = User.query.order_by(User.id).all()
-    data = UserSchema(many=True, exclude=['password']).dump(users)
+    data = UserSchema(many=True, exclude=['api_key']).dump(users)
 
     return data
 
@@ -20,7 +22,7 @@ def create(body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is None:
-        user_schema = UserSchema(exclude=['password'])
+        user_schema = UserSchema(exclude=['password', 'api_key'])
         user = user_schema.load(body)
         db_session.add(user)
         db_session.commit()
@@ -39,7 +41,7 @@ def get_one(id):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        data = UserSchema(exclude=['password']).dump(existing_user)
+        data = UserSchema(exclude=['api_key']).dump(existing_user)
 
         return data
     else:
@@ -55,7 +57,7 @@ def update(id, body, **kwargs):
     existing_user = User.query.filter_by(id=id).one_or_none()
 
     if existing_user is not None:
-        user_schema = UserSchema(exclude=['password'])
+        user_schema = UserSchema(exclude=['password', 'api_key'])
         user = user_schema.load(body)
         user.id = existing_user.id
         db_session.merge(user)
@@ -131,6 +133,42 @@ def login(id, body):
             detail = f'Wrong password for user {id}'
 
             return make_json_response(title, 401, detail)
+    else:
+        title = 'Not Found'
+        detail = f'User {id} not found'
+
+        return make_json_response(title, 404, detail)
+
+
+# GET users/<id>/api_key
+@admin_or_owner_only
+def get_api_key(id):
+    existing_user = User.query.filter_by(id=id).one_or_none()
+
+    if existing_user is not None:
+        data = UserSchema(only=['api_key']).dump(existing_user)
+
+        return data
+    else:
+        title = 'Not Found'
+        detail = f'User {id} not found'
+
+        return make_json_response(title, 404, detail)
+
+
+# PUT users/<id>/api_key
+@admin_or_owner_only
+def update_api_key(id):
+    existing_user = User.query.filter_by(id=id).one_or_none()
+
+    if existing_user is not None:
+        existing_user.api_key = secrets.token_urlsafe(32)
+        db_session.merge(existing_user)
+        db_session.commit()
+        title = 'OK'
+        detail = f'Updated API key for user {id}'
+
+        return make_json_response(title, 200, detail)
     else:
         title = 'Not Found'
         detail = f'User {id} not found'

@@ -11,6 +11,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Returns all users
@@ -29,6 +30,7 @@ paths:
     post:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Creates user
@@ -64,6 +66,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Returns user
@@ -88,6 +91,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Updates user
@@ -120,6 +124,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Deletes user
@@ -151,6 +156,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - User
       summary: Updates user password
@@ -235,10 +241,74 @@ paths:
                 detail: Wrong password for user 111111111111111111
         404:
           $ref: '#/components/responses/404UserNotFound'
+  /users/{id}/api_key:
+    get:
+      security:
+        - bearerAuth: []
+        - apiKey: []
+      tags:
+        - User
+      summary: Returns user API key
+      operationId: user.get_api_key
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key:
+                    type: string
+                    example: xxxxx
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404UserNotFound'
+    put:
+      security:
+        - bearerAuth: []
+        - apiKey: []
+      tags:
+        - User
+      summary: Updates user API key
+      operationId: user.update_api_key
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                title: OK
+                status: 200
+                detail: Updated API key for user 111111111111111111
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        403:
+          $ref: '#/components/responses/403Forbidden'
+        404:
+          $ref: '#/components/responses/404UserNotFound'
   /bots:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Bot
       summary: Returns all bots
@@ -257,6 +327,7 @@ paths:
     post:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Bot
       summary: Creates bot
@@ -292,6 +363,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Bot
       summary: Returns bot
@@ -316,6 +388,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Bot
       summary: Updates bot
@@ -348,6 +421,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Bot
       summary: Deletes bot
@@ -379,6 +453,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Cohort
       summary: Returns all cohorts
@@ -397,6 +472,7 @@ paths:
     post:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Cohort
       summary: Creates cohort
@@ -432,6 +508,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Cohort
       summary: Returns cohort
@@ -456,6 +533,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Cohort
       summary: Updates cohort
@@ -488,6 +566,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Cohort
       summary: Deletes cohort
@@ -519,6 +598,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Enrolment
       summary: Returns all enrolments
@@ -537,6 +617,7 @@ paths:
     post:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Enrolment
       summary: Creates enrolment
@@ -572,6 +653,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Enrolment
       summary: Returns enrolment
@@ -596,6 +678,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Enrolment
       summary: Updates enrolment
@@ -628,6 +711,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Enrolment
       summary: Deletes enrolment
@@ -659,6 +743,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Eval
       summary: Returns all evals
@@ -677,6 +762,7 @@ paths:
     post:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Eval
       summary: Creates eval
@@ -712,6 +798,7 @@ paths:
     get:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Eval
       summary: Returns eval
@@ -736,6 +823,7 @@ paths:
     put:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Eval
       summary: Updates eval
@@ -768,6 +856,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - apiKey: []
       tags:
         - Eval
       summary: Deletes eval
@@ -1238,3 +1327,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       x-bearerInfoFunc: models.User.decode_auth_token
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      x-apikeyInfoFunc: models.User.validate_api_key

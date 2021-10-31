@@ -38,5 +38,13 @@ def invalid_jwt(e):
     return make_json_response(title, 401, detail)
 
 
+@connexion_app.app.errorhandler(connexion.exceptions.OAuthProblem)
+def invalid_api_key(e):
+    title = 'Unauthorised'
+    detail = 'Invalid API key'
+
+    return make_json_response(title, 401, detail)
+
+
 if __name__ == '__main__':
     connexion_app.run(host='127.0.0.1', port=8080, debug=True)

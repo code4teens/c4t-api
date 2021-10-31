@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import os
 
+from connexion.exceptions import OAuthProblem
 from marshmallow import fields, post_load, Schema
 from sqlalchemy import (
     BigInteger,
@@ -31,6 +32,7 @@ class User(Base):
     display_name = Column(String(64), nullable=False)
     xp = Column(Integer, nullable=False)
     is_admin = Column(Boolean, nullable=False, default=False)
+    api_key = Column(String(43), nullable=True)
     created_at = Column(DateTime, nullable=False, default=func.now())
     last_updated = Column(DateTime, nullable=False, default=func.now())
 
@@ -75,6 +77,20 @@ class User(Base):
         return jwt.decode(
             auth_token, os.environ.get('SECRET_KEY'), algorithms=['HS256']
         )
+
+    @staticmethod
+    def validate_api_key(api_key, required_scopes):
+        user = User.query.filter_by(api_key=api_key).one_or_none()
+
+        if user is None:
+            raise OAuthProblem
+
+        payload = {
+            'sub': user.id,
+            'is_admin': user.is_admin
+        }
+
+        return payload
 
 
 class Bot(Base):
@@ -142,12 +158,13 @@ class Eval(Base):
 
 class UserSchema(Schema):
     id = fields.Integer()
-    password = fields.String()
+    password = fields.String(load_only=True)
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
     xp = fields.Integer()
     is_admin = fields.Boolean()
+    api_key = fields.String()
     created_at = fields.DateTime(dump_only=True)
     last_updated = fields.DateTime(dump_only=True)
 
