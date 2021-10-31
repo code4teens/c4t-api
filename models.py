@@ -148,18 +148,20 @@ class UserSchema(Schema):
     display_name = fields.String()
     xp = fields.Integer()
     is_admin = fields.Boolean()
-    created_at = fields.DateTime()
-    last_updated = fields.DateTime()
+    created_at = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(dump_only=True)
 
-    bots = fields.Nested('NestedBotSchema', default=[], many=True)
+    bots = fields.Nested(
+        'NestedBotSchema', default=[], many=True, dump_only=True
+    )
     enrolments = fields.Nested(
-        'NestedUserEnrolmentSchema', default=[], many=True
+        'NestedUserEnrolmentSchema', default=[], many=True, dump_only=True
     )
     evals_as_evaluator = fields.Nested(
-        'NestedUserEvalEvaluatorSchema', default=[], many=True
+        'NestedUserEvalEvaluatorSchema', default=[], many=True, dump_only=True
     )
     evals_as_evaluatee = fields.Nested(
-        'NestedUserEvalEvaluateeSchema', default=[], many=True
+        'NestedUserEvalEvaluateeSchema', default=[], many=True, dump_only=True
     )
 
     @post_load
@@ -168,10 +170,10 @@ class UserSchema(Schema):
 
 
 class NestedUserSchema(Schema):
-    id = fields.Integer()
-    name = fields.String()
-    discriminator = fields.String()
-    display_name = fields.String()
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+    discriminator = fields.String(dump_only=True)
+    display_name = fields.String(dump_only=True)
 
 
 class BotSchema(Schema):
@@ -179,11 +181,12 @@ class BotSchema(Schema):
     name = fields.String()
     discriminator = fields.String()
     display_name = fields.String()
+    user_id = fields.Integer(load_only=True)
     msg_id = fields.Integer()
-    created_at = fields.DateTime()
-    last_updated = fields.DateTime()
+    created_at = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(dump_only=True)
 
-    user = fields.Nested('NestedUserSchema')
+    user = fields.Nested('NestedUserSchema', dump_only=True)
 
     @post_load
     def make_bot(self, data, **kwargs):
@@ -191,14 +194,14 @@ class BotSchema(Schema):
 
 
 class NestedBotSchema(Schema):
-    id = fields.Integer()
-    name = fields.String()
-    discriminator = fields.String()
-    display_name = fields.String()
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+    discriminator = fields.String(dump_only=True)
+    display_name = fields.String(dump_only=True)
 
 
 class CohortSchema(Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
     name = fields.String()
     nickname = fields.String()
     duration = fields.Integer()
@@ -207,9 +210,11 @@ class CohortSchema(Schema):
     feedback_schema = fields.Dict(allow_none=True)
 
     enrolments = fields.Nested(
-        'NestedCohortEnrolmentSchema', default=[], many=True
+        'NestedCohortEnrolmentSchema', default=[], many=True, dump_only=True
     )
-    evals = fields.Nested('NestedCohortEvalSchema', default=[], many=True)
+    evals = fields.Nested(
+        'NestedCohortEvalSchema', default=[], many=True, dump_only=True
+    )
 
     @post_load
     def make_cohort(self, data, **kwargs):
@@ -217,60 +222,75 @@ class CohortSchema(Schema):
 
 
 class NestedCohortSchema(Schema):
-    id = fields.Integer()
-    name = fields.String()
-    nickname = fields.String()
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+    nickname = fields.String(dump_only=True)
 
 
 class EnrolmentSchema(Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
+    user_id = fields.Integer(load_only=True)
+    cohort_id = fields.Integer(load_only=True)
 
-    users = fields.Nested('NestedUserSchema', default=[], many=True)
-    cohort = fields.Nested('NestedCohortSchema')
+    users = fields.Nested(
+        'NestedUserSchema', default=[], many=True, dump_only=True
+    )
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
+
+    @post_load
+    def make_enrolment(self, data, **kwargs):
+        return Enrolment(**data)
 
 
 class NestedUserEnrolmentSchema(Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
 
-    cohort = fields.Nested('NestedCohortSchema')
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
 
 class NestedCohortEnrolmentSchema(Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
 
-    user = fields.Nested('NestedUserSchema')
+    user = fields.Nested('NestedUserSchema', dump_only=True)
 
 
 class EvalSchema(Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
+    evaluator_id = fields.Integer(load_only=True)
+    evaluatee_id = fields.Integer(load_only=True)
+    cohort_id = fields.Integer(load_only=True)
     date = fields.Date()
     review = fields.Dict(allow_none=True)
     feedback = fields.Dict(allow_none=True)
 
-    evaluator = fields.Nested('NestedUserSchema')
-    evaluatee = fields.Nested('NestedUserSchema')
-    cohort = fields.Nested('NestedCohortSchema')
+    evaluator = fields.Nested('NestedUserSchema', dump_only=True)
+    evaluatee = fields.Nested('NestedUserSchema', dump_only=True)
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
+
+    @post_load
+    def make_eval(self, data, **kwargs):
+        return Eval(**data)
 
 
 class NestedUserEvalEvaluatorSchema(Schema):
-    id = fields.Integer()
-    date = fields.Date()
+    id = fields.Integer(dump_only=True)
+    date = fields.Date(dump_only=True)
 
-    evaluatee = fields.Nested('NestedUserSchema')
-    cohort = fields.Nested('NestedCohortSchema')
+    evaluatee = fields.Nested('NestedUserSchema', dump_only=True)
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
 
 class NestedUserEvalEvaluateeSchema(Schema):
-    id = fields.Integer()
-    date = fields.Date()
+    id = fields.Integer(dump_only=True)
+    date = fields.Date(dump_only=True)
 
-    evaluator = fields.Nested('NestedUserSchema')
-    cohort = fields.Nested('NestedCohortSchema')
+    evaluator = fields.Nested('NestedUserSchema', dump_only=True)
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
 
 class NestedCohortEvalSchema(Schema):
-    id = fields.Integer()
-    date = fields.Date()
+    id = fields.Integer(dump_only=True)
+    date = fields.Date(dump_only=True)
 
-    evaluator = fields.Nested('NestedUserSchema')
-    evaluatee = fields.Nested('NestedUserSchema')
+    evaluator = fields.Nested('NestedUserSchema', dump_only=True)
+    evaluatee = fields.Nested('NestedUserSchema', dump_only=True)
