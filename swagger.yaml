@@ -986,11 +986,6 @@ components:
           minimum: 111111111111111111
           maximum: 999999999999999999
           example: 222222222222222222
-        msg_id:
-          type: integer
-          minimum: 111111111111111111
-          maximum: 999999999999999999
-          example: 333333333333333333
     Bot:
       allOf:
         - $ref: '#/components/schemas/PartialBot'
@@ -1001,6 +996,11 @@ components:
               minimum: 111111111111111111
               maximum: 999999999999999999
               example: 888888888888888888
+            msg_id:
+              type: integer
+              minimum: 111111111111111111
+              maximum: 999999999999999999
+              example: 333333333333333333
             created_at:
               type: string
               readOnly: true
@@ -1014,9 +1014,6 @@ components:
               $ref: '#/components/schemas/NestedUser'
         - required:
           - id
-          - name
-          - discriminator
-          - display_name
           - user_id
           - msg_id
     NestedBot:
