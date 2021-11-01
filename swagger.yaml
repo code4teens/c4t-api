@@ -950,7 +950,6 @@ components:
           - name
           - discriminator
           - display_name
-          - xp
     NestedUser:
       type: object
       readOnly: true

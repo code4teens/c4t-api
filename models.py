@@ -30,7 +30,7 @@ class User(Base):
     name = Column(String(64), nullable=False)
     discriminator = Column(String(4), nullable=False)
     display_name = Column(String(64), nullable=False)
-    xp = Column(Integer, nullable=False)
+    xp = Column(Integer, nullable=False, default=0)
     is_admin = Column(Boolean, nullable=False, default=False)
     api_key = Column(String(43), nullable=True)
     created_at = Column(DateTime, nullable=False, default=func.now())
