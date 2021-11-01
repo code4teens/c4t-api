@@ -96,9 +96,9 @@ class User(Base):
 class Bot(Base):
     __tablename__ = 'bot'
     id = Column(BigInteger, primary_key=True)
-    name = Column(String(64), nullable=False)
-    discriminator = Column(String(4), nullable=False)
-    display_name = Column(String(64), nullable=False)
+    name = Column(String(64), nullable=True)
+    discriminator = Column(String(4), nullable=True)
+    display_name = Column(String(64), nullable=True)
     user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
     msg_id = Column(BigInteger, nullable=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
