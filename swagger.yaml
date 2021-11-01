@@ -594,6 +594,26 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         404:
           $ref: '#/components/responses/404CohortNotFound'
+  /cohorts/active:
+    get:
+      security:
+        - bearerAuth: []
+        - apiKey: []
+      tags:
+        - Cohort
+      summary: Returns active cohort
+      operationId: cohort.get_active
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        401:
+          $ref: '#/components/responses/401Unauthorised'
+        404:
+          $ref: '#/components/responses/404CohortNotFound'
   /enrolments:
     get:
       security:
@@ -1052,6 +1072,10 @@ components:
           type: string
           format: date
           example: '2021-04-20'
+        is_active:
+          type: boolean
+          example: true
+          nullable: true
         review_schema:
           type: object
           nullable: true

@@ -114,6 +114,7 @@ class Cohort(Base):
     nickname = Column(String(16), nullable=False)
     duration = Column(SmallInteger, nullable=False)
     start_date = Column(Date, nullable=False)
+    is_active = Column(Boolean, nullable=True)
     review_schema = Column(JSON, nullable=True)
     feedback_schema = Column(JSON, nullable=True)
 
@@ -223,6 +224,7 @@ class CohortSchema(Schema):
     nickname = fields.String()
     duration = fields.Integer()
     start_date = fields.Date()
+    is_active = fields.Boolean(allow_none=True)
     review_schema = fields.Dict(allow_none=True)
     feedback_schema = fields.Dict(allow_none=True)
 

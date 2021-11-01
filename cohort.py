@@ -85,3 +85,18 @@ def delete(id, **kwargs):
         detail = f'Cohort {id} not found'
 
         return make_json_response(title, 404, detail)
+
+
+# GET cohorts/active
+def get_active():
+    cohort = Cohort.query.filter_by(is_active=True).one_or_none()
+
+    if cohort is not None:
+        data = CohortSchema().dump(cohort)
+
+        return data
+    else:
+        title = 'Not Found'
+        detail = f'Active cohort not found'
+
+        return make_json_response(title, 404, detail)
