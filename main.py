@@ -25,7 +25,7 @@ def close_session(exception=None):
 @connexion_app.app.errorhandler(jwt.exceptions.ExpiredSignatureError)
 def expired_jwt(e):
     title = 'Unauthorised'
-    detail = 'Expired token'
+    detail = 'Expired JWT'
 
     return make_json_response(title, 401, detail)
 
@@ -33,7 +33,7 @@ def expired_jwt(e):
 @connexion_app.app.errorhandler(jwt.exceptions.InvalidTokenError)
 def invalid_jwt(e):
     title = 'Unauthorised'
-    detail = 'Invalid token'
+    detail = 'Invalid JWT'
 
     return make_json_response(title, 401, detail)
 
