@@ -39,6 +39,9 @@ class User(Base):
     bots = relationship(
         'Bot', back_populates='user', order_by='Bot.created_at'
     )
+    channels = relationship(
+        'Channel', back_populates='user', order_by='Channel.created_at'
+    )
     enrolments = relationship(
         'Enrolment', back_populates='user', order_by='Enrolment.id'
     )
@@ -100,11 +103,26 @@ class Bot(Base):
     discriminator = Column(String(4), nullable=True)
     display_name = Column(String(64), nullable=True)
     user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    cohort_id = Column(SmallInteger, ForeignKey('cohort.id'), nullable=False)
     msg_id = Column(BigInteger, nullable=False)
     created_at = Column(DateTime, nullable=False, default=func.now())
     last_updated = Column(DateTime, nullable=False, default=func.now())
 
     user = relationship('User', back_populates='bots')
+    cohort = relationship('Cohort', back_populates='bots')
+
+
+class Channel(Base):
+    __tablename__ = 'channel'
+    id = Column(BigInteger, primary_key=True)
+    name = Column(String(64), nullable=False)
+    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    cohort_id = Column(SmallInteger, ForeignKey('cohort.id'), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=func.now())
+    last_updated = Column(DateTime, nullable=False, default=func.now())
+
+    user = relationship('User', back_populates='channels')
+    cohort = relationship('Cohort', back_populates='channels')
 
 
 class Cohort(Base):
@@ -118,6 +136,12 @@ class Cohort(Base):
     review_schema = Column(JSON, nullable=True)
     feedback_schema = Column(JSON, nullable=True)
 
+    bots = relationship(
+        'Bot', back_populates='cohort', order_by='Bot.created_at'
+    )
+    channels = relationship(
+        'Channel', back_populates='cohort', order_by='Channel.created_at'
+    )
     enrolments = relationship(
         'Enrolment', back_populates='cohort', order_by='Enrolment.id'
     )
@@ -172,6 +196,9 @@ class UserSchema(Schema):
     bots = fields.Nested(
         'NestedBotSchema', default=[], many=True, dump_only=True
     )
+    channels = fields.Nested(
+        'NestedChannelSchema', default=[], many=True, dump_only=True
+    )
     enrolments = fields.Nested(
         'NestedUserEnrolmentSchema', default=[], many=True, dump_only=True
     )
@@ -200,11 +227,13 @@ class BotSchema(Schema):
     discriminator = fields.String()
     display_name = fields.String()
     user_id = fields.Integer(load_only=True)
+    cohort_id = fields.Integer(load_only=True)
     msg_id = fields.Integer()
     created_at = fields.DateTime(dump_only=True)
     last_updated = fields.DateTime(dump_only=True)
 
     user = fields.Nested('NestedUserSchema', dump_only=True)
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
     @post_load
     def make_bot(self, data, **kwargs):
@@ -218,6 +247,27 @@ class NestedBotSchema(Schema):
     display_name = fields.String(dump_only=True)
 
 
+class ChannelSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    user_id = fields.Integer(load_only=True)
+    cohort_id = fields.Integer(load_only=True)
+    created_at = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(dump_only=True)
+
+    user = fields.Nested('NestedUserSchema', dump_only=True)
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
+
+    @post_load
+    def make_channel(self, data, **kwargs):
+        return Channel(**data)
+
+
+class NestedChannelSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+
+
 class CohortSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String()
@@ -228,6 +278,12 @@ class CohortSchema(Schema):
     review_schema = fields.Dict(allow_none=True)
     feedback_schema = fields.Dict(allow_none=True)
 
+    bots = fields.Nested(
+        'NestedBotSchema', default=[], many=True, dump_only=True
+    )
+    channels = fields.Nested(
+        'NestedChannelSchema', default=[], many=True, dump_only=True
+    )
     enrolments = fields.Nested(
         'NestedCohortEnrolmentSchema', default=[], many=True, dump_only=True
     )
