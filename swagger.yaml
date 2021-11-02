@@ -1107,7 +1107,7 @@ components:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedChannel'
+                $ref: '#/components/schemas/NestedUserChannel'
             enrolments:
               type: array
               readOnly: true
@@ -1267,7 +1267,7 @@ components:
           - name
           - user_id
           - cohort_id
-    NestedChannel:
+    NestedUserChannel:
       type: object
       readOnly: true
       properties:
@@ -1279,6 +1279,22 @@ components:
         name:
           type: string
           example: janedoe
+        cohort:
+          $ref: '#/components/schemas/NestedCohort'
+    NestedCohortChannel:
+      type: object
+      readOnly: true
+      properties:
+        id:
+          type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          example: 444444444444444444
+        name:
+          type: string
+          example: janedoe
+        user:
+          $ref: '#/components/schemas/NestedUser'
     PartialCohort:
       type: object
       properties:
@@ -1323,7 +1339,7 @@ components:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedChannel'
+                $ref: '#/components/schemas/NestedCohortChannel'
             enrolments:
               type: array
               readOnly: true

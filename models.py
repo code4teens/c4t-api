@@ -197,7 +197,7 @@ class UserSchema(Schema):
         'NestedBotSchema', default=[], many=True, dump_only=True
     )
     channels = fields.Nested(
-        'NestedChannelSchema', default=[], many=True, dump_only=True
+        'NestedUserChannelSchema', default=[], many=True, dump_only=True
     )
     enrolments = fields.Nested(
         'NestedUserEnrolmentSchema', default=[], many=True, dump_only=True
@@ -263,9 +263,18 @@ class ChannelSchema(Schema):
         return Channel(**data)
 
 
-class NestedChannelSchema(Schema):
+class NestedUserChannelSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(dump_only=True)
+
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
+
+
+class NestedCohortChannelSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+
+    user = fields.Nested('NestedUserSchema', dump_only=True)
 
 
 class CohortSchema(Schema):
@@ -282,7 +291,7 @@ class CohortSchema(Schema):
         'NestedBotSchema', default=[], many=True, dump_only=True
     )
     channels = fields.Nested(
-        'NestedChannelSchema', default=[], many=True, dump_only=True
+        'NestedCohortChannelSchema', default=[], many=True, dump_only=True
     )
     enrolments = fields.Nested(
         'NestedCohortEnrolmentSchema', default=[], many=True, dump_only=True
