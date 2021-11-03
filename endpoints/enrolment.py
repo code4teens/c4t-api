@@ -1,6 +1,6 @@
 from database import db_session
 from models import Enrolment, EnrolmentSchema
-from utils import admin_only, make_json_response
+from utils import admin_only
 
 
 # GET enrolments
@@ -8,7 +8,7 @@ def get_all():
     enrolments = Enrolment.query.order_by(Enrolment.id).all()
     data = EnrolmentSchema(many=True).dump(enrolments)
 
-    return data
+    return data, 200
 
 
 # POST enrolments
@@ -28,25 +28,31 @@ def create(body, **kwargs):
 
         return data, 201
     else:
-        title = 'Conflict'
-        detail = f'User {user_id} already enrolled to Cohort {cohort_id}'
+        data = {
+            'title': 'Conflict',
+            'status': 409,
+            'detail': f'User {user_id} already enrolled to Cohort {cohort_id}'
+        }
 
-        return make_json_response(title, 409, detail)
+        return data, 409
 
 
 # GET enrolments/<id>
 def get_one(id):
-    existing_enrolment = Enrolment.query.filter_by(id=id).one_or_none()
+    enrolment = Enrolment.query.filter_by(id=id).one_or_none()
 
-    if existing_enrolment is not None:
-        data = EnrolmentSchema().dump(existing_enrolment)
+    if enrolment is not None:
+        data = EnrolmentSchema().dump(enrolment)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Enrolment {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Enrolment {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # PUT enrolments/<id>
@@ -62,28 +68,37 @@ def update(id, body, **kwargs):
         db_session.commit()
         data = enrolment_schema.dump(existing_enrolment)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Enrolment {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Enrolment {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # DELETE enrolments/<id>
 @admin_only
 def delete(id, **kwargs):
-    existing_enrolment = Enrolment.query.filter_by(id=id).one_or_none()
+    enrolment = Enrolment.query.filter_by(id=id).one_or_none()
 
-    if existing_enrolment is not None:
-        db_session.delete(existing_enrolment)
+    if enrolment is not None:
+        db_session.delete(enrolment)
         db_session.commit()
-        title = 'OK'
-        detail = f'Enrolment {id} deleted'
+        data = {
+            'title': 'OK',
+            'status': 200,
+            'detail': f'Enrolment {id} deleted'
+        }
 
-        return make_json_response(title, 200, detail)
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Enrolment {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Enrolment {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404

@@ -765,7 +765,7 @@ paths:
       tags:
         - Enrolment
       summary: Returns all enrolments
-      operationId: enrolment.get_all
+      operationId: endpoints.enrolment.get_all
       responses:
         200:
           description: OK
@@ -784,7 +784,7 @@ paths:
       tags:
         - Enrolment
       summary: Creates enrolment
-      operationId: enrolment.create
+      operationId: endpoints.enrolment.create
       requestBody:
         required: true
         content:
@@ -820,7 +820,7 @@ paths:
       tags:
         - Enrolment
       summary: Returns enrolment
-      operationId: enrolment.get_one
+      operationId: endpoints.enrolment.get_one
       parameters:
         - name: id
           in: path
@@ -845,7 +845,7 @@ paths:
       tags:
         - Enrolment
       summary: Updates enrolment
-      operationId: enrolment.update
+      operationId: endpoints.enrolment.update
       parameters:
         - name: id
           in: path
@@ -878,7 +878,7 @@ paths:
       tags:
         - Enrolment
       summary: Deletes enrolment
-      operationId: enrolment.delete
+      operationId: endpoints.enrolment.delete
       parameters:
         - name: id
           in: path
