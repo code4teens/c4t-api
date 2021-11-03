@@ -821,7 +821,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Enrolment 1 already exists
+                detail: User 111111111111111111 already enrolled to Cohort 1
   /enrolments/{id}:
     get:
       security:

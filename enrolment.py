@@ -14,8 +14,10 @@ def get_all():
 # POST enrolments
 @admin_only
 def create(body, **kwargs):
-    id = body.get('id')
-    existing_enrolment = Enrolment.query.filter_by(id=id).one_or_none()
+    user_id = body.get('user_id')
+    cohort_id = body.get('cohort_id')
+    existing_enrolment = Enrolment.query.filter_by(user_id=user_id)\
+        .filter_by(cohort_id=cohort_id).one_or_none()
 
     if existing_enrolment is None:
         enrolment_schema = EnrolmentSchema()
@@ -27,7 +29,7 @@ def create(body, **kwargs):
         return data, 201
     else:
         title = 'Conflict'
-        detail = f'Enrolment {id} already exists'
+        detail = f'User {user_id} already enrolled to Cohort {cohort_id}'
 
         return make_json_response(title, 409, detail)
 
