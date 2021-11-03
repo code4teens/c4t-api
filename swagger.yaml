@@ -15,7 +15,7 @@ paths:
       tags:
         - User
       summary: Returns all users
-      operationId: user.get_all
+      operationId: endpoints.user.get_all
       responses:
         200:
           description: OK
@@ -34,7 +34,7 @@ paths:
       tags:
         - User
       summary: Creates user
-      operationId: user.create
+      operationId: endpoints.user.create
       requestBody:
         required: true
         content:
@@ -70,7 +70,7 @@ paths:
       tags:
         - User
       summary: Returns user
-      operationId: user.get_one
+      operationId: endpoints.user.get_one
       parameters:
         - name: id
           in: path
@@ -95,7 +95,7 @@ paths:
       tags:
         - User
       summary: Updates user
-      operationId: user.update
+      operationId: endpoints.user.update
       parameters:
         - name: id
           in: path
@@ -128,7 +128,7 @@ paths:
       tags:
         - User
       summary: Deletes user
-      operationId: user.delete
+      operationId: endpoints.user.delete
       parameters:
         - name: id
           in: path
@@ -160,7 +160,7 @@ paths:
       tags:
         - User
       summary: Updates user password
-      operationId: user.update_password
+      operationId: endpoints.user.update_password
       parameters:
         - name: id
           in: path
@@ -200,7 +200,7 @@ paths:
       tags:
         - User
       summary: Logs user in
-      operationId: user.login
+      operationId: endpoints.user.login
       parameters:
         - name: id
           in: path
@@ -249,7 +249,7 @@ paths:
       tags:
         - User
       summary: Returns user API key
-      operationId: user.get_api_key
+      operationId: endpoints.user.get_api_key
       parameters:
         - name: id
           in: path
@@ -280,7 +280,7 @@ paths:
       tags:
         - User
       summary: Updates user API key
-      operationId: user.update_api_key
+      operationId: endpoints.user.update_api_key
       parameters:
         - name: id
           in: path
