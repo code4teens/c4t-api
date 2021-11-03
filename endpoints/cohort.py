@@ -1,6 +1,6 @@
 from database import db_session
 from models import Cohort, CohortSchema
-from utils import admin_only, make_json_response
+from utils import admin_only
 
 
 # GET cohorts
@@ -8,7 +8,7 @@ def get_all():
     cohorts = Cohort.query.order_by(Cohort.id).all()
     data = CohortSchema(many=True).dump(cohorts)
 
-    return data
+    return data, 200
 
 
 # POST cohorts
@@ -30,12 +30,15 @@ def get_one(id):
     if existing_cohort is not None:
         data = CohortSchema().dump(existing_cohort)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Cohort {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Cohort {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # PUT cohorts/<id>
@@ -51,31 +54,40 @@ def update(id, body, **kwargs):
         db_session.commit()
         data = cohort_schema.dump(existing_cohort)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Cohort {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Cohort {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # DELETE cohorts/<id>
 @admin_only
 def delete(id, **kwargs):
-    existing_cohort = Cohort.query.filter_by(id=id).one_or_none()
+    cohort = Cohort.query.filter_by(id=id).one_or_none()
 
-    if existing_cohort is not None:
-        db_session.delete(existing_cohort)
+    if cohort is not None:
+        db_session.delete(cohort)
         db_session.commit()
-        title = 'OK'
-        detail = f'Cohort {id} deleted'
+        data = {
+            'title': 'OK',
+            'status': 200,
+            'detail': f'Cohort {id} deleted'
+        }
 
-        return make_json_response(title, 200, detail)
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Cohort {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Cohort {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # GET cohorts/active
@@ -85,9 +97,12 @@ def get_active():
     if cohort is not None:
         data = CohortSchema().dump(cohort)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Active cohort not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Active cohort not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
