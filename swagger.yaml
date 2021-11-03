@@ -457,7 +457,7 @@ paths:
       tags:
         - Channel
       summary: Returns all channels
-      operationId: channel.get_all
+      operationId: endpoints.channel.get_all
       responses:
         200:
           description: OK
@@ -476,7 +476,7 @@ paths:
       tags:
         - Channel
       summary: Creates channel
-      operationId: channel.create
+      operationId: endpoints.channel.create
       requestBody:
         required: true
         content:
@@ -512,7 +512,7 @@ paths:
       tags:
         - Channel
       summary: Returns channel
-      operationId: channel.get_one
+      operationId: endpoints.channel.get_one
       parameters:
         - name: id
           in: path
@@ -537,7 +537,7 @@ paths:
       tags:
         - Channel
       summary: Updates channel
-      operationId: channel.update
+      operationId: endpoints.channel.update
       parameters:
         - name: id
           in: path
@@ -570,7 +570,7 @@ paths:
       tags:
         - Channel
       summary: Deletes channel
-      operationId: channel.delete
+      operationId: endpoints.channel.delete
       parameters:
         - name: id
           in: path

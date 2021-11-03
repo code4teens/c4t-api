@@ -1,6 +1,6 @@
 from database import db_session
 from models import Channel, ChannelSchema
-from utils import admin_only, make_json_response
+from utils import admin_only
 
 
 # GET channels
@@ -8,7 +8,7 @@ def get_all():
     channels = Channel.query.order_by(Channel.id).all()
     data = ChannelSchema(many=True).dump(channels)
 
-    return data
+    return data, 200
 
 
 # POST channels
@@ -26,10 +26,13 @@ def create(body, **kwargs):
 
         return data, 201
     else:
-        title = 'Conflict'
-        detail = f'Channel {id} already exists'
+        data = {
+            'title': 'Conflict',
+            'status': 409,
+            'detail': f'Channel {id} already exists'
+        }
 
-        return make_json_response(title, 409, detail)
+        return data, 409
 
 
 # GET channels/<id>
@@ -39,12 +42,15 @@ def get_one(id):
     if channel is not None:
         data = ChannelSchema().dump(channel)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Channel {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Channel {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # PUT channels/<id>
@@ -60,12 +66,15 @@ def update(id, body, **kwargs):
         db_session.commit()
         data = channel_schema.dump(existing_channel)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Channel {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Channel {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # DELETE channels/<id>
@@ -76,12 +85,18 @@ def delete(id, **kwargs):
     if channel is not None:
         db_session.delete(channel)
         db_session.commit()
-        title = 'OK'
-        detail = f'Channel {id} deleted'
+        data = {
+            'title': 'OK',
+            'status': 200,
+            'detail': f'Channel {id} deleted'
+        }
 
-        return make_json_response(title, 200, detail)
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Channel {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Channel {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
