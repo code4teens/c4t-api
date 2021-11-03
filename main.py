@@ -5,7 +5,6 @@ import connexion
 import jwt
 
 from database import db_session
-from utils import make_json_response
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 connexion_app = connexion.App(__name__, specification_dir=basedir)
@@ -24,26 +23,35 @@ def close_session(exception=None):
 
 @connexion_app.app.errorhandler(jwt.exceptions.ExpiredSignatureError)
 def expired_jwt(e):
-    title = 'Unauthorised'
-    detail = 'Expired JWT'
+    data = {
+        'title': 'Unauthorised',
+        'status': 401,
+        'detail': 'Expired JWT'
+    }
 
-    return make_json_response(title, 401, detail)
+    return data, 401
 
 
 @connexion_app.app.errorhandler(jwt.exceptions.InvalidTokenError)
 def invalid_jwt(e):
-    title = 'Unauthorised'
-    detail = 'Invalid JWT'
+    data = {
+        'title': 'Unauthorised',
+        'status': 401,
+        'detail': 'Invalid JWT'
+    }
 
-    return make_json_response(title, 401, detail)
+    return data, 401
 
 
 @connexion_app.app.errorhandler(connexion.exceptions.OAuthProblem)
 def invalid_api_key(e):
-    title = 'Unauthorised'
-    detail = 'Invalid API key'
+    data = {
+        'title': 'Unauthorised',
+        'status': 401,
+        'detail': 'Invalid API key'
+    }
 
-    return make_json_response(title, 401, detail)
+    return data, 401
 
 
 if __name__ == '__main__':
