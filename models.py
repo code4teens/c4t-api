@@ -327,9 +327,7 @@ class EnrolmentSchema(Schema):
     user_id = fields.Integer(load_only=True)
     cohort_id = fields.Integer(load_only=True)
 
-    users = fields.Nested(
-        'NestedUserSchema', default=[], many=True, dump_only=True
-    )
+    user = fields.Nested('NestedUserSchema', dump_only=True)
     cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
     @post_load
