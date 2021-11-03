@@ -312,7 +312,7 @@ paths:
       tags:
         - Bot
       summary: Returns all bots
-      operationId: bot.get_all
+      operationId: endpoints.bot.get_all
       responses:
         200:
           description: OK
@@ -331,7 +331,7 @@ paths:
       tags:
         - Bot
       summary: Creates bot
-      operationId: bot.create
+      operationId: endpoints.bot.create
       requestBody:
         required: true
         content:
@@ -367,7 +367,7 @@ paths:
       tags:
         - Bot
       summary: Returns bot
-      operationId: bot.get_one
+      operationId: endpoints.bot.get_one
       parameters:
         - name: id
           in: path
@@ -392,7 +392,7 @@ paths:
       tags:
         - Bot
       summary: Updates bot
-      operationId: bot.update
+      operationId: endpoints.bot.update
       parameters:
         - name: id
           in: path
@@ -425,7 +425,7 @@ paths:
       tags:
         - Bot
       summary: Deletes bot
-      operationId: bot.delete
+      operationId: endpoints.bot.delete
       parameters:
         - name: id
           in: path
