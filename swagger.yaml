@@ -639,16 +639,6 @@ paths:
           $ref: '#/components/responses/401Unauthorised'
         403:
           $ref: '#/components/responses/403Forbidden'
-        409:
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              example:
-                title: Conflict
-                status: 409
-                detail: Cohort 1 already exists
   /cohorts/{id}:
     get:
       security:
@@ -966,7 +956,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Eval 1 already exists
+                detail: Eval with abovementioned details already exists
   /evals/{id}:
     get:
       security:

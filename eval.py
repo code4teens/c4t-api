@@ -14,8 +14,15 @@ def get_all():
 # POST evals
 @admin_only
 def create(body, **kwargs):
-    id = body.get('id')
-    existing_eval = Eval.query.filter_by(id=id).one_or_none()
+    evaluator_id = body.get('evaluator_id')
+    evaluatee_id = body.get('evaluatee_id')
+    cohort_id = body.get('cohort_id')
+    date = body.get('date')
+    existing_eval = Eval.query.filter_by(evaluator_id=evaluator_id)\
+        .filter_by(evaluatee_id=evaluatee_id)\
+        .filter_by(cohort_id=cohort_id)\
+        .filter_by(date=date)\
+        .one_or_none()
 
     if existing_eval is None:
         eval_schema = EvalSchema()
@@ -27,7 +34,7 @@ def create(body, **kwargs):
         return data, 201
     else:
         title = 'Conflict'
-        detail = f'Eval {id} already exists'
+        detail = f'Eval with abovementioned details already exists'
 
         return make_json_response(title, 409, detail)
 

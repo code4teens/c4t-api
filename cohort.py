@@ -14,22 +14,13 @@ def get_all():
 # POST cohorts
 @admin_only
 def create(body, **kwargs):
-    id = body.get('id')
-    existing_cohort = Cohort.query.filter_by(id=id).one_or_none()
+    cohort_schema = CohortSchema()
+    cohort = cohort_schema.load(body)
+    db_session.add(cohort)
+    db_session.commit()
+    data = cohort_schema.dump(cohort)
 
-    if existing_cohort is None:
-        cohort_schema = CohortSchema()
-        cohort = cohort_schema.load(body)
-        db_session.add(cohort)
-        db_session.commit()
-        data = cohort_schema.dump(cohort)
-
-        return data, 201
-    else:
-        title = 'Conflict'
-        detail = f'Cohort {id} already exists'
-
-        return make_json_response(title, 409, detail)
+    return data, 201
 
 
 # GET cohorts/<id>
