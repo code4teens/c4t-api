@@ -1,6 +1,6 @@
 from database import db_session
 from models import Eval, EvalSchema
-from utils import admin_only, make_json_response
+from utils import admin_only
 
 
 # GET evals
@@ -8,7 +8,7 @@ def get_all():
     evals = Eval.query.order_by(Eval.id).all()
     data = EvalSchema(many=True).dump(evals)
 
-    return data
+    return data, 200
 
 
 # POST evals
@@ -33,25 +33,31 @@ def create(body, **kwargs):
 
         return data, 201
     else:
-        title = 'Conflict'
-        detail = f'Eval with abovementioned details already exists'
+        data = {
+            'title': 'Conflict',
+            'status': 409,
+            'detail': f'Eval with abovementioned details already exists'
+        }
 
-        return make_json_response(title, 409, detail)
+        return data, 409
 
 
 # GET evals/<id>
 def get_one(id):
-    existing_eval = Eval.query.filter_by(id=id).one_or_none()
+    eval = Eval.query.filter_by(id=id).one_or_none()
 
-    if existing_eval is not None:
-        data = EvalSchema().dump(existing_eval)
+    if eval is not None:
+        data = EvalSchema().dump(eval)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Eval {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Eval {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # PUT evals/<id>
@@ -67,28 +73,37 @@ def update(id, body, **kwargs):
         db_session.commit()
         data = eval_schema.dump(existing_eval)
 
-        return data
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Eval {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Eval {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404
 
 
 # DELETE evals/<id>
 @admin_only
 def delete(id, **kwargs):
-    existing_eval = Eval.query.filter_by(id=id).one_or_none()
+    eval = Eval.query.filter_by(id=id).one_or_none()
 
-    if existing_eval is not None:
-        db_session.delete(existing_eval)
+    if eval is not None:
+        db_session.delete(eval)
         db_session.commit()
-        title = 'OK'
-        detail = f'Eval {id} deleted'
+        data = {
+            'title': 'OK',
+            'status': 200,
+            'detail': f'Eval {id} deleted'
+        }
 
-        return make_json_response(title, 200, detail)
+        return data, 200
     else:
-        title = 'Not Found'
-        detail = f'Eval {id} not found'
+        data = {
+            'title': 'Not Found',
+            'status': 404,
+            'detail': f'Eval {id} not found'
+        }
 
-        return make_json_response(title, 404, detail)
+        return data, 404

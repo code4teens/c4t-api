@@ -910,7 +910,7 @@ paths:
       tags:
         - Eval
       summary: Returns all evals
-      operationId: eval.get_all
+      operationId: endpoints.eval.get_all
       responses:
         200:
           description: OK
@@ -929,7 +929,7 @@ paths:
       tags:
         - Eval
       summary: Creates eval
-      operationId: eval.create
+      operationId: endpoints.eval.create
       requestBody:
         required: true
         content:
@@ -965,7 +965,7 @@ paths:
       tags:
         - Eval
       summary: Returns eval
-      operationId: eval.get_one
+      operationId: endpoints.eval.get_one
       parameters:
         - name: id
           in: path
@@ -990,7 +990,7 @@ paths:
       tags:
         - Eval
       summary: Updates eval
-      operationId: eval.update
+      operationId: endpoints.eval.update
       parameters:
         - name: id
           in: path
@@ -1023,7 +1023,7 @@ paths:
       tags:
         - Eval
       summary: Deletes eval
-      operationId: eval.delete
+      operationId: endpoints.eval.delete
       parameters:
         - name: id
           in: path
