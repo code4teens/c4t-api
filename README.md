@@ -1,5 +1,17 @@
 # Code4Teens REST API
 
+## Deploy on Google Cloud Run
+```sh
+$ gcloud run deploy --source .
+$ gcloud run services update <service-name> \
+    --add-cloudsql-instances <connection-name> \
+    --set-env-vars SECRET_KEY=<secret-key>,\
+      MYSQL_CONNECTION=<connection-name>,\
+      MYSQL_USERNAME=<username>,\
+      MYSQL_PASSWORD=<password>,\
+      MYSQL_DATABASE=<database>
+```
+
 ## Database Schema
 
 ### User
