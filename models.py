@@ -194,7 +194,7 @@ class UserSchema(Schema):
     last_updated = fields.DateTime(dump_only=True)
 
     bots = fields.Nested(
-        'NestedBotSchema', default=[], many=True, dump_only=True
+        'NestedUserBotSchema', default=[], many=True, dump_only=True
     )
     channels = fields.Nested(
         'NestedUserChannelSchema', default=[], many=True, dump_only=True
@@ -203,10 +203,10 @@ class UserSchema(Schema):
         'NestedUserEnrolmentSchema', default=[], many=True, dump_only=True
     )
     evals_as_evaluator = fields.Nested(
-        'NestedUserEvalEvaluatorSchema', default=[], many=True, dump_only=True
+        'NestedEvaluatorEvalSchema', default=[], many=True, dump_only=True
     )
     evals_as_evaluatee = fields.Nested(
-        'NestedUserEvalEvaluateeSchema', default=[], many=True, dump_only=True
+        'NestedEvaluateeEvalSchema', default=[], many=True, dump_only=True
     )
 
     @post_load
@@ -240,11 +240,22 @@ class BotSchema(Schema):
         return Bot(**data)
 
 
-class NestedBotSchema(Schema):
+class NestedUserBotSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(dump_only=True)
     discriminator = fields.String(dump_only=True)
     display_name = fields.String(dump_only=True)
+
+    cohort = fields.Nested('NestedCohortSchema', dump_only=True)
+
+
+class NestedCohortBotSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+    discriminator = fields.String(dump_only=True)
+    display_name = fields.String(dump_only=True)
+
+    user = fields.Nested('NestedUserSchema', dump_only=True)
 
 
 class ChannelSchema(Schema):
@@ -288,7 +299,7 @@ class CohortSchema(Schema):
     feedback_schema = fields.Dict(allow_none=True)
 
     bots = fields.Nested(
-        'NestedBotSchema', default=[], many=True, dump_only=True
+        'NestedCohortBotSchema', default=[], many=True, dump_only=True
     )
     channels = fields.Nested(
         'NestedCohortChannelSchema', default=[], many=True, dump_only=True
@@ -356,7 +367,7 @@ class EvalSchema(Schema):
         return Eval(**data)
 
 
-class NestedUserEvalEvaluatorSchema(Schema):
+class NestedEvaluatorEvalSchema(Schema):
     id = fields.Integer(dump_only=True)
     date = fields.Date(dump_only=True)
 
@@ -364,7 +375,7 @@ class NestedUserEvalEvaluatorSchema(Schema):
     cohort = fields.Nested('NestedCohortSchema', dump_only=True)
 
 
-class NestedUserEvalEvaluateeSchema(Schema):
+class NestedEvaluateeEvalSchema(Schema):
     id = fields.Integer(dump_only=True)
     date = fields.Date(dump_only=True)
 

@@ -1102,7 +1102,7 @@ components:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedBot'
+                $ref: '#/components/schemas/NestedUserBot'
             channels:
               type: array
               readOnly: true
@@ -1117,12 +1117,12 @@ components:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedUserEvalEvaluator'
+                $ref: '#/components/schemas/NestedEvaluatorEval'
             evals_as_evaluatee:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedUserEvalEvaluatee'
+                $ref: '#/components/schemas/NestedEvaluateeEval'
         - required:
           - id
           - name
@@ -1134,16 +1134,16 @@ components:
       properties:
         id:
           type: integer
-          example: 222222222222222222
+          example: 111111111111111111
         name:
           type: string
-          example: janedoe
+          example: johndoe
         discriminator:
           type: string
-          example: '2222'
+          example: '1111'
         display_name:
           type: string
-          example: Jane Doe
+          example: John Doe
     PartialBot:
       type: object
       properties:
@@ -1163,7 +1163,7 @@ components:
           writeOnly: true
           minimum: 111111111111111111
           maximum: 999999999999999999
-          example: 222222222222222222
+          example: 111111111111111111
         cohort_id:
           type: integer
           writeOnly: true
@@ -1202,7 +1202,7 @@ components:
           - user_id
           - cohort_id
           - msg_id
-    NestedBot:
+    NestedUserBot:
       type: object
       readOnly: true
       properties:
@@ -1222,18 +1222,44 @@ components:
         display_name:
           type: string
           example: Clockwork the Bot
+        cohort:
+          type: object
+          $ref: '#/components/schemas/NestedCohort'
+    NestedCohortBot:
+      type: object
+      readOnly: true
+      properties:
+        id:
+          type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          example: 888888888888888888
+        name:
+          type: string
+          example: clockwork
+        discriminator:
+          type: string
+          minLength: 4
+          maxLength: 4
+          example: '8888'
+        display_name:
+          type: string
+          example: Clockwork the Bot
+        user:
+          type: object
+          $ref: '#/components/schemas/NestedUser'
     PartialChannel:
       type: object
       properties:
         name:
           type: string
-          example: janedoe
+          example: johndoe
         user_id:
           type: integer
           writeOnly: true
           minimum: 111111111111111111
           maximum: 999999999999999999
-          example: 222222222222222222
+          example: 111111111111111111
         cohort_id:
           type: integer
           writeOnly: true
@@ -1278,7 +1304,7 @@ components:
           example: 444444444444444444
         name:
           type: string
-          example: janedoe
+          example: johndoe
         cohort:
           $ref: '#/components/schemas/NestedCohort'
     NestedCohortChannel:
@@ -1292,7 +1318,7 @@ components:
           example: 444444444444444444
         name:
           type: string
-          example: janedoe
+          example: johndoe
         user:
           $ref: '#/components/schemas/NestedUser'
     PartialCohort:
@@ -1334,7 +1360,7 @@ components:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/NestedBot'
+                $ref: '#/components/schemas/NestedCohortBot'
             channels:
               type: array
               readOnly: true
@@ -1376,7 +1402,7 @@ components:
           writeOnly: true
           minimum: 111111111111111111
           maximum: 999999999999999999
-          example: 222222222222222222
+          example: 111111111111111111
         cohort_id:
           type: integer
           writeOnly: true
@@ -1460,7 +1486,20 @@ components:
               $ref: '#/components/schemas/NestedUser'
             evaluatee:
               type: object
-              $ref: '#/components/schemas/NestedUser'
+              readOnly: true
+              properties:
+                id:
+                  type: integer
+                  example: 222222222222222222
+                name:
+                  type: string
+                  example: janedoe
+                discriminator:
+                  type: string
+                  example: '2222'
+                display_name:
+                  type: string
+                  example: Jane Doe
             cohort:
               type: object
               $ref: '#/components/schemas/NestedCohort'
@@ -1469,7 +1508,7 @@ components:
           - evaluatee_id
           - cohort_id
           - date
-    NestedUserEvalEvaluator:
+    NestedEvaluatorEval:
       type: object
       readOnly: true
       properties:
@@ -1483,7 +1522,7 @@ components:
         date:
           type: string
           example: '2021-04-20'
-    NestedUserEvalEvaluatee:
+    NestedEvaluateeEval:
       type: object
       readOnly: true
       properties:
