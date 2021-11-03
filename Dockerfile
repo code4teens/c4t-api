@@ -2,8 +2,8 @@ FROM python:3.9-slim
 
 ENV PYTHONBUFFERED True
 
-ENV APP_HOME /app
-WORKDIR $APP_HOME
+WORKDIR /app
+
 COPY . ./
 
 RUN pip install --no-cache-dir -r requirements.txt
