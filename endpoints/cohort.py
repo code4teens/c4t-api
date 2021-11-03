@@ -1,5 +1,6 @@
 from database import db_session
-from models import Cohort, CohortSchema
+from models import Cohort
+from schemata import CohortSchema
 from utils import admin_only
 
 

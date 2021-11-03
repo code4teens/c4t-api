@@ -1,5 +1,6 @@
 from database import db_session
-from models import Channel, ChannelSchema
+from models import Channel
+from schemata import ChannelSchema
 from utils import admin_only
 
 

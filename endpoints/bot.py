@@ -1,5 +1,6 @@
 from database import db_session
-from models import Bot, BotSchema
+from models import Bot
+from schemata import BotSchema
 from utils import admin_only
 
 

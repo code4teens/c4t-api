@@ -1,5 +1,6 @@
 from database import db_session
-from models import Enrolment, EnrolmentSchema
+from models import Enrolment
+from schemata import EnrolmentSchema
 from utils import admin_only
 
 

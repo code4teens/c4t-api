@@ -1,5 +1,6 @@
 from database import db_session
-from models import Eval, EvalSchema
+from models import Eval
+from schemata import EvalSchema
 from utils import admin_only
 
 

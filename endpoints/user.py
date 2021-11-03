@@ -3,7 +3,8 @@ import secrets
 import bcrypt
 
 from database import db_session
-from models import User, UserSchema
+from models import User
+from schemata import UserSchema
 from utils import admin_only, admin_or_owner_only
 
 
