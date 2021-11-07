@@ -16,9 +16,14 @@ def get_all():
 @admin_only
 def create(body, **kwargs):
     id = body.get('id')
-    existing_channel = Channel.query.filter_by(id=id).one_or_none()
+    user_id = body.get('user_id')
+    cohort_id = body.get('cohort_id')
+    existing_channel_1 = Channel.query.filter_by(id=id).one_or_none()
+    existing_channel_2 = Channel.query.filter_by(user_id=user_id)\
+        .filter_by(cohort_id=cohort_id)\
+        .one_or_none()
 
-    if existing_channel is None:
+    if existing_channel_1 is None and existing_channel_2 is None:
         channel_schema = ChannelSchema()
         channel = channel_schema.load(body)
         db_session.add(channel)
@@ -30,7 +35,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'Channel {id} already exists'
+            'detail': f'Channel with posted details already exists'
         }
 
         return data, 409
