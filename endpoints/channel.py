@@ -35,7 +35,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'Channel with posted details already exists'
+            'detail': 'Channel with posted details already exists'
         }
 
         return data, 409

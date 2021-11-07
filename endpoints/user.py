@@ -20,9 +20,14 @@ def get_all():
 @admin_only
 def create(body, **kwargs):
     id = body.get('id')
-    existing_user = User.query.filter_by(id=id).one_or_none()
+    name = body.get('name')
+    discriminator = body.get('discriminator')
+    existing_user_1 = User.query.filter_by(id=id).one_or_none()
+    existing_user_2 = User.query.filter_by(name=name)\
+        .filter_by(discriminator=discriminator)\
+        .one_or_none()
 
-    if existing_user is None:
+    if existing_user_1 is None and existing_user_2 is None:
         user_schema = UserSchema(exclude=['api_key'])
         user = user_schema.load(body)
         db_session.add(user)
@@ -34,7 +39,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'User {id} already exists'
+            'detail': 'User with posted details already exists'
         }
 
         return data, 409

@@ -16,9 +16,14 @@ def get_all():
 @admin_only
 def create(body, **kwargs):
     id = body.get('id')
-    existing_bot = Bot.query.filter_by(id=id).one_or_none()
+    name = body.get('name')
+    discriminator = body.get('discriminator')
+    existing_bot_1 = Bot.query.filter_by(id=id).one_or_none()
+    existing_bot_2 = Bot.query.filter_by(name=name)\
+        .filter_by(discriminator=discriminator)\
+        .one_or_none()
 
-    if existing_bot is None:
+    if existing_bot_1 is None and existing_bot_2 is None:
         bot_schema = BotSchema()
         bot = bot_schema.load(body)
         db_session.add(bot)
@@ -30,7 +35,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'Bot {id} already exists'
+            'detail': 'Bot with posted details already exists'
         }
 
         return data, 409

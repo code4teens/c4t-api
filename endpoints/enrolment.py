@@ -32,7 +32,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'User {user_id} already enrolled to Cohort {cohort_id}'
+            'detail': 'Enrolment with posted details already exists'
         }
 
         return data, 409

@@ -61,7 +61,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: User 111111111111111111 already exists
+                detail: User with posted details already exists
   /users/{id}:
     get:
       security:
@@ -358,7 +358,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Bot 888888888888888888 already exists
+                detail: Bot with posted details already exists
   /bots/{id}:
     get:
       security:
@@ -503,7 +503,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Channel 444444444444444444 already exists
+                detail: Channel with posted details already exists
   /channels/{id}:
     get:
       security:
@@ -811,7 +811,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: User 111111111111111111 already enrolled to Cohort 1
+                detail: Enrolment with posted details already exists
   /enrolments/{id}:
     get:
       security:
@@ -956,7 +956,7 @@ paths:
               example:
                 title: Conflict
                 status: 409
-                detail: Eval with abovementioned details already exists
+                detail: Eval with posted details already exists
   /evals/{id}:
     get:
       security:

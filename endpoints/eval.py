@@ -37,7 +37,7 @@ def create(body, **kwargs):
         data = {
             'title': 'Conflict',
             'status': 409,
-            'detail': f'Eval with abovementioned details already exists'
+            'detail': 'Eval with posted details already exists'
         }
 
         return data, 409
