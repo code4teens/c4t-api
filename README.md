@@ -68,7 +68,9 @@ CREATE TABLE `channel` (
   `last_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`cohort_id`),
+  KEY `cohort_id` (`cohort_id`),
   CONSTRAINT `channel_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `channel_ibfk_2` FOREIGN KEY (`cohort_id`) REFERENCES `cohort` (`id`),
   CONSTRAINT `channel_chk_1` CHECK ((length(`id`) = 18))
 )
 ```
