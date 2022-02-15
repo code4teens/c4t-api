@@ -54,7 +54,7 @@ paths:
             example:
               title: OK
               status: 200
-              example: User 111111111111111111 logged in
+              detail: User 111111111111111111 logged in
         400:
           $ref: '#/responses/400-Bad-Request'
         401:
@@ -71,7 +71,7 @@ paths:
             example:
               title: Unauthorised
               status: 401
-              example: Wrong password for User 111111111111111111
+              detail: Wrong password for User 111111111111111111
         404:
           description: Not Found
           schema:
@@ -86,13 +86,103 @@ paths:
             example:
               title: Not Found
               status: 404
-              example: User 111111111111111111 not found
+              detail: User 111111111111111111 not found
+  /subscriptions:
+    get:
+      summary: Get all Subscriptions
+      operationId: get_subscriptions
+      tags:
+        - Subscription
+      x-google-backend:
+        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app/subscriptions
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subscription'
+            example:
+              - id: 1
+                email: john.doe@gmail.com
+                created_at: "2021-04-20T08:42:00"
+              - id: 2
+                email: jane.doe@gmail.com
+                created_at: "2021-04-20T08:42:00"
+    post:
+      summary: Create a Subscription
+      operationId: create_subscription
+      tags:
+        - Subscription
+      x-google-backend:
+        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app/subscriptions
+      parameters:
+        - in: body
+          name: details
+          description: Subscription details
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                description: Email address
+                maxLength: 64
+            example:
+              email: john.doe@gmail.com
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Created
+              status: 201
+              detail: Subscription created
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        409:
+          description: Conflict
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Conflict
+              status: 409
+              detail: Subscription already exists
 responses:
   400-Bad-Request:
     description: Bad Request
     schema:
       $ref: '#/definitions/400-Bad-Request'
 definitions:
+  Subscription:
+    type: object
+    properties:
+      id:
+        type: integer
+      email: 
+        type: string
+      created_at:
+        type: string
+    example:
+      id: 1
+      email: john.doe@gmail.com
+      created_at: "2021-04-20T08:42:00"
   400-Bad-Request:
     type: object
     properties:
@@ -105,4 +195,4 @@ definitions:
     example:
       title: Bad Request
       status: 400
-      detail: Missing some keys or contains extra keys
+      detail: Bad request
