@@ -24,9 +24,6 @@ paths:
           description: Login credentials
           schema:
             type: object
-            required:
-              - id
-              - password
             properties:
               id:
                 type: integer
@@ -36,6 +33,9 @@ paths:
               password:
                 type: string
                 description: Password
+            required:
+              - id
+              - password
             example:
               id: 111111111111111111
               password: password
@@ -87,6 +87,238 @@ paths:
               title: Not Found
               status: 404
               detail: User 111111111111111111 not found
+  /enrolments:
+    get:
+      summary: Get all Enrolments
+      operationId: get_enrolments
+      tags:
+        - Enrolment
+      x-google-backend:
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Enrolment'
+            example:
+              - id: 1
+                user:
+                  id: 111111111111111111
+                  name: John Doe
+                  discriminator: "1111"
+                  display_name: john.doe
+                cohort:
+                  id: 1
+                  name: Code4Teens BotCamp
+                  nickname: c4t-bc
+              - id: 2
+                user:
+                  id: 222222222222222222
+                  name: Jane Doe
+                  discriminator: "2222"
+                  display_name: jane.doe
+                cohort:
+                  id: 1
+                  name: Code4Teens BotCamp
+                  nickname: c4t-bc
+    post:
+      summary: Create an Enrolment
+      operationId: create_enrolment
+      tags:
+        - Enrolment
+      x-google-backend:
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments
+      parameters:
+        - in: body
+          name: details
+          description: Enrolment details
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                description: Discord ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              cohort_id:
+                type: integer
+                description: Cohort ID
+                minimum: 1
+            required:
+              - user_id
+              - cohort_id
+            example:
+              user_id: 111111111111111111
+              cohort_id: 1
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Created
+              status: 201
+              detail: Enrolment 1 created
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        409:
+          description: Conflict
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Conflict
+              status: 409
+              detail: Enrolment with posted details already exists
+  /enrolments/{id}:
+    get:
+      summary: Get Enrolment
+      operationId: get_enrolment
+      tags:
+        - Enrolment
+      x-google-backend:
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+      parameters:
+        - in: path
+          name: id
+          description: Enrolment ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+              $ref: '#/definitions/Enrolment'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Enrolment 1 not found
+    put:
+      summary: Update Enrolment
+      operationId: update_enrolment
+      tags:
+        - Enrolment
+      x-google-backend:
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+      parameters:
+        - in: path
+          name: id
+          description: Enrolment ID
+          type: integer
+          required: true
+        - in: body
+          name: details
+          description: Enrolment details
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                description: Discord ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              cohort_id:
+                type: integer
+                description: Cohort ID
+                minimum: 1
+            required:
+              - user_id
+              - cohort_id
+            example:
+              user_id: 111111111111111111
+              cohort_id: 1
+      responses:
+        200:
+          description: OK
+          schema:
+              $ref: '#/definitions/Enrolment'
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Enrolment 1 not found
+    delete:
+      summary: Delete Enrolment
+      operationId: delete_enrolment
+      tags:
+        - Enrolment
+      x-google-backend:
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+      parameters:
+        - in: path
+          name: id
+          description: Enrolment ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: OK
+              status: 200
+              detail: Enrolment 1 deleted
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Enrolment 1 not found
   /subscriptions:
     get:
       summary: Get all Subscriptions
@@ -122,13 +354,13 @@ paths:
           description: Subscription details
           schema:
             type: object
-            required:
-              - email
             properties:
               email:
                 type: string
                 description: Email address
                 maxLength: 64
+            required:
+              - email
             example:
               email: john.doe@gmail.com
       responses:
@@ -170,6 +402,42 @@ responses:
     schema:
       $ref: '#/definitions/400-Bad-Request'
 definitions:
+  Enrolment:
+    type: object
+    properties:
+      id:
+        type: integer
+      user:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          discriminator:
+            type: string
+          display_name:
+            type: string
+      cohort:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          nickname:
+            type: string
+    example:
+      id: 1
+      user:
+        id: 111111111111111111
+        name: John Doe
+        discriminator: "1111"
+        display_name: john.doe
+      cohort:
+        id: 1
+        name: Code4Teens BotCamp
+        nickname: c4t-bc
   Subscription:
     type: object
     properties:
