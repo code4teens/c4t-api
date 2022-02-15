@@ -1,0 +1,108 @@
+swagger: "2.0"
+info:
+  title: Code4Teens REST API
+  version: 1.0.0
+schemes:
+  - https
+basePath: /v1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /auth/login:
+    post:
+      summary: Log a User in
+      operationId: login
+      tags:
+        - Auth
+      x-google-backend:
+        address: https://api-auth-gzuvchc2qq-as.a.run.app/auth/login
+      parameters:
+        - in: body
+          name: credentials
+          description: Login credentials
+          schema:
+            type: object
+            required:
+              - id
+              - password
+            properties:
+              id:
+                type: integer
+                description: Discord ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              password:
+                type: string
+                description: Password
+            example:
+              id: 111111111111111111
+              password: password
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: OK
+              status: 200
+              example: User 111111111111111111 logged in
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Unauthorised
+              status: 401
+              example: Wrong password for User 111111111111111111
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              example: User 111111111111111111 not found
+responses:
+  400-Bad-Request:
+    description: Bad Request
+    schema:
+      $ref: '#/definitions/400-Bad-Request'
+definitions:
+  400-Bad-Request:
+    type: object
+    properties:
+      title:
+        type: string
+      status:
+        type: integer
+      detail:
+        type: integer
+    example:
+      title: Bad Request
+      status: 400
+      detail: Missing some keys or contains extra keys
