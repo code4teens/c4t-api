@@ -4,7 +4,6 @@ info:
   version: 1.0.0
 schemes:
   - https
-basePath: /v1
 consumes:
   - application/json
 produces:
@@ -17,7 +16,8 @@ paths:
       tags:
         - Auth
       x-google-backend:
-        address: https://api-auth-gzuvchc2qq-as.a.run.app/auth/login
+        address: https://api-auth-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: body
           name: credentials
@@ -94,7 +94,8 @@ paths:
       tags:
         - Enrolment
       x-google-backend:
-        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: OK
@@ -129,7 +130,8 @@ paths:
       tags:
         - Enrolment
       x-google-backend:
-        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: body
           name: details
@@ -192,7 +194,8 @@ paths:
       tags:
         - Enrolment
       x-google-backend:
-        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: path
           name: id
@@ -225,7 +228,8 @@ paths:
       tags:
         - Enrolment
       x-google-backend:
-        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: path
           name: id
@@ -281,7 +285,8 @@ paths:
       tags:
         - Enrolment
       x-google-backend:
-        address: https://api-enrolments-gzuvchc2qq-as.a.run.app/enrolments/{id}
+        address: https://api-enrolments-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: path
           name: id
@@ -326,7 +331,8 @@ paths:
       tags:
         - Subscription
       x-google-backend:
-        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app/subscriptions
+        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: OK
@@ -347,7 +353,8 @@ paths:
       tags:
         - Subscription
       x-google-backend:
-        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app/subscriptions
+        address: https://api-subscriptions-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
       parameters:
         - in: body
           name: details
