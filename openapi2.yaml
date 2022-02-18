@@ -87,6 +87,243 @@ paths:
               title: Not Found
               status: 404
               detail: User 111111111111111111 not found
+  /cohorts:
+    get:
+      summary: Get all Cohorts
+      operationId: get_cohorts
+      tags:
+        - Cohort
+      x-google-backend:
+        address: https://api-cohorts-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cohort'
+            example:
+              - id: 1
+                name: Code4Teens BotCamp
+                nickname: c4t-bc
+                duration: 9
+                start_date: "2021-04-20"
+                is_active: true
+                review_schema:
+                feedback_schema:
+              - id: 2
+                name: Code4Work BotCamp
+                nickname: c4w-bc
+                duration: 6
+                start_date: "2021-04-20"
+                is_active: false
+                review_schema:
+                feedback_schema:
+    post:
+      summary: Create a Cohort
+      operationId: create_cohort
+      tags:
+        - Cohort
+      x-google-backend:
+        address: https://api-cohorts-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: body
+          name: details
+          description: Eval details
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Cohort name
+              nickname:
+                type: string
+                description: Cohort nickname
+              duration:
+                type: integer
+                description: Cohort duration
+                minimum: 1
+              start_date:
+                type: string
+                description: Cohort start date
+            required:
+              - name
+              - nickname
+              - duration
+              - start_date
+            example:
+              name: Code4Teens BotCamp
+              nickname: c4t-bc
+              duration: 9
+              start_date: "2021-04-20"
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Created
+              status: 201
+              detail: Cohort 1 created
+        400:
+          $ref: '#/responses/400-Bad-Request'
+  /cohorts/{id}:
+    get:
+      summary: Get Cohort
+      operationId: get_cohort
+      tags:
+        - Cohort
+      x-google-backend:
+        address: https://api-cohorts-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Cohort ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Cohort'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Cohort 1 not found
+    put:
+      summary: Update Cohort
+      operationId: update_cohort
+      tags:
+        - Cohort
+      x-google-backend:
+        address: https://api-cohorts-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Cohort ID
+          type: integer
+          required: true
+        - in: body
+          name: details
+          description: Cohort details
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Cohort name
+              nickname:
+                type: string
+                description: Cohort nickname
+              duration:
+                type: integer
+                description: Cohort duration
+                minimum: 1
+              start_date:
+                type: string
+                description: Cohort start date
+              review_schema:
+                type: object
+                description: Cohort review schema
+              feedback_schema:
+                type: object
+                description: Cohort feedback schema
+            example:
+              name: Code4Teens BotCamp
+              nickname: c4t-bc
+              duration: 9
+              start_date: "2021-04-20"
+              review_schema:
+              feedback_schema:
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Cohort'
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Cohort 1 not found
+    delete:
+      summary: Delete Cohort
+      operationId: delete_cohort
+      tags:
+        - Cohort
+      x-google-backend:
+        address: https://api-cohorts-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Cohort ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: OK
+              status: 200
+              detail: Cohort 1 deleted
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Cohort 1 not found
   /enrolments:
     get:
       summary: Get all Enrolments
@@ -523,8 +760,10 @@ paths:
                 description: Eval date
               review:
                 type: object
+                description: Eval review
               feedback:
                 type: object
+                description: Eval feedback
             example:
               evaluator_id: 111111111111111111
               evaluatee_id: 222222222222222222
@@ -709,6 +948,34 @@ definitions:
         type: string
       nickname:
         type: string
+      duration:
+        type: integer
+      start_date:
+        type: string
+      is_active:
+        type: boolean
+      review_schema:
+        type: object
+      feedback_schema:
+        type: object
+    example:
+      id: 1
+      name: Code4Teens BotCamp
+      nickname: c4t-bc
+      duration: 9
+      start_date: "2021-04-20"
+      is_active: true
+      review_schema:
+      feedback_schema:
+  NestedCohort:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      nickname:
+        type: string
     example:
       id: 1
       name: Code4Teens BotCamp
@@ -721,7 +988,7 @@ definitions:
       user:
         $ref: '#/definitions/User'
       cohort:
-        $ref: '#/definitions/Cohort'
+        $ref: '#/definitions/NestedCohort'
     example:
       id: 1
       user:
@@ -743,7 +1010,7 @@ definitions:
       evaluatee:
         $ref: '#/definitions/User'
       cohort:
-        $ref: '#/definitions/Cohort'
+        $ref: '#/definitions/NestedCohort'
       date:
         type: string
       review:
