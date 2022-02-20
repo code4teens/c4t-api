@@ -79,7 +79,7 @@ CREATE TABLE `channel` (
 ```sql
 CREATE TABLE `cohort` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `nickname` varchar(16) NOT NULL,
   `duration` tinyint(3) unsigned NOT NULL,
   `start_date` date NOT NULL,
