@@ -961,7 +961,7 @@ paths:
               name:
                 type: string
                 description: Cohort name
-                maxLength: 32
+                maxLength: 64
               nickname:
                 type: string
                 description: Cohort nickname
@@ -1059,7 +1059,7 @@ paths:
               name:
                 type: string
                 description: Cohort name
-                maxLength: 32
+                maxLength: 64
               nickname:
                 type: string
                 description: Cohort nickname
