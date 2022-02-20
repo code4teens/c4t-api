@@ -27,7 +27,7 @@ paths:
             properties:
               id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               password:
@@ -135,20 +135,20 @@ paths:
             properties:
               id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               name:
                 type: string
-                description: Discord name
+                description: User name
                 maxLength: 64
               discriminator:
                 type: string
-                description: Discord discriminator
+                description: User discriminator
                 maxLength: 4
               display_name:
                 type: string
-                description: Discord display name
+                description: User display name
                 maxLength: 64
             required:
               - id
@@ -254,15 +254,15 @@ paths:
             properties:
               name:
                 type: string
-                description: Discord name
+                description: User name
                 maxLength: 64
               discriminator:
                 type: string
-                description: Discord discriminator
+                description: User discriminator
                 maxLength: 4
               display_name:
                 type: string
-                description: Discord display name
+                description: User display name
                 maxLength: 64
               is_admin:
                 type: boolean
@@ -407,7 +407,7 @@ paths:
             properties:
               id:
                 type: integer
-                description: Discord ID
+                description: Bot ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               name:
@@ -424,7 +424,7 @@ paths:
                 maxLength: 64
               user_id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -433,7 +433,7 @@ paths:
                 minimum: 1
               msg_id:
                 type: integer
-                description: Discord message ID
+                description: Message ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
             required:
@@ -558,7 +558,7 @@ paths:
                 maxLength: 64
               user_id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -567,7 +567,7 @@ paths:
                 minimum: 1
               msg_id:
                 type: integer
-                description: Discord message ID
+                description: Message ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
             example:
@@ -646,6 +646,270 @@ paths:
               title: Not Found
               status: 404
               detail: Bot 333333333333333333 not found
+  /channels:
+    get:
+      summary: Get all Channels
+      operationId: get_channels
+      tags:
+        - Channel
+      x-google-backend:
+        address: https://api-channels-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Channel'
+            example:
+              - id: 555555555555555555
+                name: johndoechannel
+                user:
+                  id: 111111111111111111
+                  name: johndoe
+                  discriminator: "1111"
+                  display_name: John Doe
+                cohort:
+                  id: 1
+                  name: Code4Teens BotCamp
+                  nickname: c4t-bc
+                created_at: "2021-04-20T08:42:00"
+                last_updated: "2021-04-20T08:42:00"
+              - id: 666666666666666666
+                name: janedoechannel
+                user:
+                  id: 222222222222222222
+                  name: janedoe
+                  discriminator: "2222"
+                  display_nane: Jane Doe
+                cohort:
+                  id: 1
+                  name: Code4Teens BotCamp
+                  nickname: c4t-bc
+                created_at: "2021-04-20T08:42:00"
+                last_updated: "2021-04-20T08:42:00"
+    post:
+      summary: Create a Channel
+      operationId: create_channel
+      tags:
+        - Channel
+      x-google-backend:
+        address: https://api-channels-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: body
+          name: details
+          description: Channel details
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Channel ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              name:
+                type: string
+                description: Channel name
+                maxLength: 64
+              user_id:
+                type: integer
+                description: User ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              cohort_id:
+                type: integer
+                description: Cohort ID
+                minimum: 1
+            required:
+              - id
+              - name
+              - user_id
+              - cohort_id
+            example:
+              id: 555555555555555555
+              name: johndoechannel
+              user_id: 111111111111111111
+              cohort_id: 1
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Created
+              status: 201
+              detail: Channel 555555555555555555 created
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        409:
+          description: Conflict
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Conflict
+              status: 409
+              detail: Channel with posted details already exists
+  /channels/{id}:
+    get:
+      summary: Get Channel
+      operationId: get_channel
+      tags:
+        - Channel
+      x-google-backend:
+        address: https://api-channels-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Channel ID
+          type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Channel'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Channel 555555555555555555 not found
+    put:
+      summary: Update Channel
+      operationId: update_channel
+      tags:
+        - Channel
+      x-google-backend:
+        address: https://api-channels-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Channel ID
+          type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          required: true
+        - in: body
+          name: details
+          description: Channel details
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Channel name
+                maxLength: 64
+              user_id:
+                type: integer
+                description: User ID
+                minimum: 111111111111111111
+                maximum: 999999999999999999
+              cohort_id:
+                type: integer
+                description: Cohort ID
+                minimum: 1
+            example:
+              name: johndoechannel
+              user_id: 111111111111111111
+              cohort_id: 1
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Channel'
+        400:
+          $ref: '#/responses/400-Bad-Request'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Channel 555555555555555555 not found
+    delete:
+      summary: Delete Channel
+      operationId: delete_channel
+      tags:
+        - Channel
+      x-google-backend:
+        address: https://api-channels-gzuvchc2qq-as.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - in: path
+          name: id
+          description: Channel ID
+          type: integer
+          minimum: 111111111111111111
+          maximum: 999999999999999999
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: OK
+              status: 200
+              detail: Channel 555555555555555555 deleted
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: integer
+            example:
+              title: Not Found
+              status: 404
+              detail: Channel 555555555555555555 not found
   /cohorts:
     get:
       summary: Get all Cohorts
@@ -941,7 +1205,7 @@ paths:
             properties:
               user_id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -1044,7 +1308,7 @@ paths:
             properties:
               user_id:
                 type: integer
-                description: Discord ID
+                description: User ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -1191,12 +1455,12 @@ paths:
             properties:
               evaluator_id:
                 type: integer
-                description: Discord ID
+                description: Evaluator ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               evaluatee_id:
                 type: integer
-                description: Discord ID
+                description: Evaluatee ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -1306,12 +1570,12 @@ paths:
             properties:
               evaluator_id:
                 type: integer
-                description: Discord ID
+                description: Evaluator ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               evaluatee_id:
                 type: integer
-                description: Discord ID
+                description: Evaluatee ID
                 minimum: 111111111111111111
                 maximum: 999999999999999999
               cohort_id:
@@ -1563,6 +1827,35 @@ definitions:
         name: Code4Teens BotCamp
         nickname: c4t-bc
       msg_id: 999999999999999999
+      created_at: "2021-04-20T08:42:00"
+      last_updated: "2021-04-20T08:42:00"
+  Channel:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      user:
+        $ref: '#/definitions/NestedUser'
+      cohort:
+        $ref: '#/definitions/NestedCohort'
+      created_at:
+        type: string
+      last_updated:
+        type: string
+    example:
+      id: 555555555555555555
+      name: johndoechannel
+      user:
+        id: 111111111111111111
+        name: johndoe
+        discriminator: "1111"
+        display_name: John Doe
+      cohort:
+        id: 1
+        name: Code4Teens BotCamp
+        nickname: c4t-bc
       created_at: "2021-04-20T08:42:00"
       last_updated: "2021-04-20T08:42:00"
   Cohort:
