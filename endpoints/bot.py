@@ -16,14 +16,15 @@ def get_all():
 @admin_only
 def create(body, **kwargs):
     id = body.get('id')
-    name = body.get('name')
-    discriminator = body.get('discriminator')
+    # name = body.get('name')
+    # discriminator = body.get('discriminator')
     existing_bot_1 = Bot.query.filter_by(id=id).one_or_none()
-    existing_bot_2 = Bot.query.filter_by(name=name)\
-        .filter_by(discriminator=discriminator)\
-        .one_or_none()
+    # existing_bot_2 = Bot.query.filter_by(name=name)\
+    #     .filter_by(discriminator=discriminator)\
+    #     .one_or_none()
 
-    if existing_bot_1 is None and existing_bot_2 is None:
+    # if existing_bot_1 is None and existing_bot_2 is None:
+    if existing_bot_1 is None:
         bot_schema = BotSchema()
         bot = bot_schema.load(body)
         db_session.add(bot)
